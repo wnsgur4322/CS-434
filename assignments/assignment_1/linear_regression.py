@@ -14,3 +14,4 @@ if __name__ == "__main__":
         housing_train = pd.read_csv('housing_train.csv')
 
         print(housing_train)
+        print(housing_test)

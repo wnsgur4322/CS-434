@@ -17,4 +17,8 @@ pip3 install pandas
 2. Check library versions with library_check.py
 python3 library_check.py
 
+- then you should see this prompts on the terminal
+numpy version: 1.18.2 (or other version)
+pandas version: 1.0.3 (or other version)
+
 
