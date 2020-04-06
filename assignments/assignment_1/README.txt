@@ -13,6 +13,7 @@ source ./venv/bin/activate
 pip3 install --upgrade pip
 pip3 install numpy
 pip3 install pandas
+pip3 install matplotlib
 
 2. Check library versions with library_check.py
 python3 library_check.py
@@ -20,5 +21,6 @@ python3 library_check.py
 - then you should see this prompts on the terminal
 numpy version: 1.18.2 (or other version)
 pandas version: 1.0.3 (or other version)
+matplotlib version: 3.2.1 (or other version)
 
 
