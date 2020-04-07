@@ -14,6 +14,7 @@ pip3 install --upgrade pip
 pip3 install numpy
 pip3 install pandas
 pip3 install matplotlib
+pip3 install sklearn
 
 2. Check library versions with library_check.py
 python3 library_check.py
@@ -24,3 +25,7 @@ pandas version: 1.0.3 (or other version)
 matplotlib version: 3.2.1 (or other version)
 
 
+3. How to compile question 1-1 ~ 1-2 part
+python3 q1_2.py housing_train.csv housing_test.csv
+
+# make sure to place the data files on the same directory with python file 
