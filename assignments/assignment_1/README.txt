@@ -25,7 +25,17 @@ pandas version: 1.0.3 (or other version)
 matplotlib version: 3.2.1 (or other version)
 
 
-3. How to compile question 1-1 ~ 1-2 part
+3. How to compile question 1-1 ~ 1-2 part file
 python3 q1_2.py housing_train.csv housing_test.csv
+
+# make sure to place the data files on the same directory with python file
+
+4. How to compile question 1-3 part file
+python3 q1_3.py housing_train.csv housing_test.csv
+
+# make sure to place the data files on the same directory with python file
+
+5. How to compile question 1-4 part file
+python3 q1_4.py housing_train.csv housing_test.csv
 
 # make sure to place the data files on the same directory with python file 

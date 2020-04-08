@@ -118,38 +118,3 @@ if __name__ == "__main__":
         #ASE part
         print("The ASE of training data: %f" % ASE(X, Y, w))
         print("THe ASE of testing data: %f " % ASE(X_test, Y_test, w))
-
-
-
-
-
-#drawing code with matplot (maybe use later)
-'''
-        #train dataset 2D graph plot
-        X = housing_train['CRIM'].values.reshape(-1,1)
-        Y = housing_train['MEDV'].values.reshape(-1,1)
-        
-        reg = LinearRegression()
-        reg.fit(X, Y)
-        print("The linear model is: Y = {:.5} + {:.5}X".format(reg.intercept_[0], reg.coef_[0][0]))
-
-        predictions = reg.predict(X)
-
-        plt.figure(figsize=(16, 8))
-        plt.scatter(
-            housing_train['CRIM'],
-            housing_train['MEDV'],
-            c='black'
-        )
-        plt.plot(
-            housing_train['CRIM'],
-            predictions,
-            c='blue',
-            linewidth=2        
-        )
-        plt.title('median value of housing (attr 14.) vs Crime rate ')
-        plt.xlabel('CRIM')
-        plt.ylabel('MEDV')
-        plt.savefig('CRIM vs MEDV.png')
-        plt.show()
-'''
