@@ -98,18 +98,22 @@ if __name__ == '__main__':
 
     w, iteration, index, accuracy = batch_grad_desc(train_x_train, train_y_train, w_train, learningrate, 0.1, train_x_test, train_y_test)
 
+    print("total accuracy of training(%): ", accuracy[499])
     plt.plot(index,accuracy)
+    plt.title("Plot of the learning curve (Training accuracy)")
     plt.xticks(np.arange(0, 500, step = 100), rotation='vertical')
     plt.xlabel("Number of Iterarion")
     plt.ylabel("Accuracy (%)")
     plt.show()
-    print(accuracy[499])
 
     w_test, iteration, index, accuracy = batch_grad_desc(test_x_train, test_y_train, w_test, learningrate, 0.001, test_x_test, test_y_test)
-    print(accuracy[499])
+    
 
+    print("total accuracy of test(%): ", accuracy[499])
     plt.plot(index,accuracy)
+    plt.title("Plot of the learning curve (Test accuracy)")
     plt.xticks(np.arange(0, 500, step = 100), rotation='vertical')
     plt.xlabel("Number of Iterarion")
     plt.ylabel("Accuracy (%)")
     plt.show()
+
