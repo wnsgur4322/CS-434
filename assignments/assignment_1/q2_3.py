@@ -37,10 +37,10 @@ def logistic_function(w, x):
     return 1.0/(1 + np.exp(-np.dot(x, w.T)))
 
 # gradietn (derivate) of Loss function l() == inverted triangel with l()
-def logistic_gradient(w, x, y):
+def logistic_gradient(w, x, y, lamb):
     temp = logistic_function(w, x) - y #compare with y (label)
     result = np.dot(temp.T, x) #reverse traingle of l (page on Gradient of L(w))
-    return result
+    return result + (lamb)*w
 
 #loss function == l()
 #cost : needs to work with hypthosis
@@ -66,14 +66,14 @@ def batch_grad_desc(x, y, w, learning_r, eps, x_type, y_type, lamb):
 
     while condition:
         temp = cost
-        w = w - (learning_r*logistic_gradient(w, x, y))
+        w = w - (learning_r*logistic_gradient(w, x, y, lamb))
         cost = learning_w(w, x, y, lamb)
         check = temp - cost
         cost_all.append(check)
         temp_accuracy = prediction(w, x_type, y_type, lamb)
         index.append(iteration)
         accuracy.append(temp_accuracy)
-        if np.sqrt((logistic_gradient(w, x, y)*logistic_gradient(w, x, y).T)) <= eps:
+        if np.sqrt((logistic_gradient(w, x, y, lamb)*logistic_gradient(w, x, y, lamb).T)) <= eps:
             condition = False
         elif iteration >= 500:
             condition = False
