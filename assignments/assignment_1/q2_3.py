@@ -43,7 +43,7 @@ def logistic_function(w, x):
 
 def logistic_gradient(w, x, y):
     #print(y.reshape(x.shape[0], -1))
-    temp = logistic_function(w, x) - y.reshape(x.shape[0], -1)
+    temp = logistic_function(w, x) - y
     result = np.dot(temp.T, x)
     return result
 
