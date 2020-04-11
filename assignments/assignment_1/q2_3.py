@@ -23,44 +23,32 @@ parser.add_argument('usps_test')
 parser.add_argument('learningrate')
 args = parser.parse_args()
 
-
-# sigmoid function (L(w) - for q2)
+# result of 0 or 1 == (o(w^T*x)) 
 def logistic_function(w, x):
     ptive_inf = math.inf
     ntive_inf = -math.inf
     result = 1/(1 + np.exp(-np.dot(x, w.T)))
     #print(result)
-    '''
-    size = len(result)
-    print(size)
-    for i in range(0, size-1):
-        if result[i] == [ntive_inf]:
-            print("test")
-            result[i] = 1
-            '''
     return result
     #return 1/(1 + np.exp(-np.dot(x, w.T))) #(700,1) or (400, 1)
 
+
+# gradietn (derivate) of Loss function l() == inverted triangel with l()
 def logistic_gradient(w, x, y):
     #print(y.reshape(x.shape[0], -1))
     temp = logistic_function(w, x) - y
     result = np.dot(temp.T, x)
     return result
 
+#loss function == l()
 def learning_w(w, x, y, lamb):
     logistic_fun = logistic_function(w, x)
-    #print(logistic_fun)
     y = np.squeeze(y)
-    #print(np.log(logistic_fun))
-    size = len(x) # number of samples for train
-    ptive_inf = math.inf
-    ntive_inf = -math.inf
-    print(1*ptive_inf, 0*ptive_inf, 1*ntive_inf, 0*ntive_inf)
-    print(np.log(0.5), np.log(1), np.log(0))
 
-    result = -(y*np.log(logistic_fun)) - ((1-y)*np.log(1-logistic_fun)) + (1/2)*(lamb)*(w*w.T)*size
+    result = -(y*np.log(logistic_fun)) - ((1-y)*np.log(1-logistic_fun))
     return np.sum(result)
 
+#batch learning of logistic regression
 def batch_grad_desc(x, y, w, learning_r, eps, x_type, y_type, lamb):
 
     iteration = 1
@@ -70,37 +58,38 @@ def batch_grad_desc(x, y, w, learning_r, eps, x_type, y_type, lamb):
     condition = True
     cost = learning_w(w, x, y, lamb)
     check = 1
-    #row, col = w.shape
 
+    
+    #row, col = w.shape
     #gradient = np.zeros((row,col))
 
     while condition:
-        #row, col = w.shape
-        #gradient = np.zeros((row,col))
+        #initiazlie of gradient
+        row, col = w.shape
+        gradient = np.zeros((row,col))
         temp = cost
-        #gradient = logistic_gradient(w, x, y)
-        #w = w - (0.01*gradient)
-        w = w - (0.01*logistic_gradient(w, x, y))
-        cost = learning_w(w, x, y, lamb)
-        check = temp - learning_w(w, x, y, lamb)
+        gradient = logistic_gradient(w, x, y)
+        w = w - (0.01*gradient)
+        #w = w - (0.01 * logistic_gradient(w, x, y))
+        #cost = learning_w(w, x, y, lamb)
+        #check = temp - learning_w(w, x, y, lamb)
         temp_accuracy = prediction(w, x_type, y_type)
         index.append(iteration)
         accuracy.append(temp_accuracy)
-        if check > eps:
-        #if (math.sqrt(gradient*gradient.T)) <= eps:
+        #print(math.sqrt(logistic_gradient(w, x, y)*logistic_gradient(w, x, y).T), logistic_gradient(w, x, y))
+        #if math.sqrt(logistic_gradient(w, x, y)*logistic_gradient(w, x, y).T) <= 0.001:
+        if (math.sqrt(gradient*gradient.T)) <= eps:
             condition = False
-        elif iteration >= 500:
+        if iteration >= 500:
             condition = False
-        elif np.isnan(check) == True:
-            condition = False
+        #elif np.isnan(check) == True:
+        #    condition = False
         iteration += 1
     
     print(temp, cost, check)
 
 
     return w, iteration, index, accuracy
-
-
 
 
 def prediction(w, x_type, y_type):
@@ -135,7 +124,7 @@ if __name__ == '__main__':
     w, iteration, index, accuracy = batch_grad_desc(train_x_train, train_y_train, w_train, learningrate, 0.001, train_x_test, train_y_test, 0.001)
 
     m = len(accuracy)
-    print("Accuracy of training(%): ", accuracy[m-1], " / Size of iteration: ", m)
+    print("Accuracy of training(%): ", accuracy[m-1], " / Size of iteration: ", iteration)
     plt.plot(index,accuracy)
     plt.title("Plot of the learning curve (Training accuracy)")
     plt.xticks(np.arange(0, 500, step = 100), rotation='vertical')
@@ -143,10 +132,10 @@ if __name__ == '__main__':
     plt.ylabel("Accuracy (%)")
     plt.show()
 
-    w_test, iteration, index, accuracy = batch_grad_desc(test_x_train, test_y_train, w_test, learningrate, 0.001, test_x_test, test_y_test, 0.001)
+    w2, iteration, index, accuracy = batch_grad_desc(test_x_train, test_y_train, w_test, learningrate, 0.001, test_x_test, test_y_test, 0.001)
     
     m = len(accuracy)
-    print("Accuracy of test(%): ", accuracy[m-1], " / Size of iteration: ", m)
+    print("Accuracy of test(%): ", accuracy[m-1], " / Size of iteration: ", iteration)
     plt.plot(index,accuracy)
     plt.title("Plot of the learning curve (Test accuracy)")
     plt.xticks(np.arange(0, 500, step = 100), rotation='vertical')
