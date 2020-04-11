@@ -83,7 +83,7 @@ def batch_grad_desc(x, y, w, learning_r, eps, x_type, y_type):
         gradient = np.zeros((row,col))
         #temp = cost
         gradient = logistic_gradient(w, x, y)
-        w = w - (learning_r*gradient)
+        w = w - (0.01*gradient)
         #cost = learning_w(w, x, y)
         #check = temp - cost
         temp_accuracy = prediction(w, x_type, y_type)
