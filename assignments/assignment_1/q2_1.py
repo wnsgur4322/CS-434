@@ -7,12 +7,12 @@ import numpy as np
 import pandas as pd
 import random
 import pylab
-from scipy import stats
+#from scipy import stats
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import argparse as arg
-from sklearn.linear_model import LogisticRegression
+#from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 import math
 
