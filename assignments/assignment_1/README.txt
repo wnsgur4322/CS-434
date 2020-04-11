@@ -36,3 +36,15 @@ python3 q1_3.py housing_train.csv housing_test.csv
 python3 q1_4.py housing_train.csv housing_test.csv
 
 # make sure to place the data files on the same directory with python file 
+
+6. How to compile question 2-1 part file
+python3 q2_1.py usps_train.csv usps_test.csv <learningrate number>
+** <learningrate number> must be NUMBER.
+
+# make sure to place the data files on the same directory with python file 
+
+7. How to compile question 2-3 part file
+python3 q2_3.py usps_train.csv usps_test.csv <lambda number>
+** <lambda number> must be NUMBER.
+
+# make sure to place the data files on the same directory with python file 
