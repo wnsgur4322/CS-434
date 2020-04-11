@@ -11,10 +11,7 @@ bash
 virtualenv venv -p $(which python3)
 source ./venv/bin/activate
 pip3 install --upgrade pip
-pip3 install numpy
-pip3 install pandas
-pip3 install matplotlib
-pip3 install sklearn
+pip3 install numpy pandas matplotlib sklearn mpmath
 
 2. Check library versions with library_check.py
 python3 library_check.py
