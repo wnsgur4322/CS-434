@@ -20,6 +20,7 @@ python3 library_check.py
 numpy version: 1.18.2 (or other version)
 pandas version: 1.0.3 (or other version)
 matplotlib version: 3.2.1 (or other version)
+sklearn version: 0.22.2.post1 (or other version)
 
 
 3. How to compile question 1-1 ~ 1-2 part file
