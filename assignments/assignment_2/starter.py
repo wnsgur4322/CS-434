@@ -38,7 +38,7 @@ def create_bow(input, vocabulary):
         preprocessor=None,
         stop_words=None,
         #vocabulary=vocabulary,
-        max_features=1000
+        max_features=2000
     )
     bag_of_words = vectorizer.fit_transform(input)
     #np.asarray(bag_of_words)
@@ -51,10 +51,6 @@ def create_bow(input, vocabulary):
 if __name__ == "__main__":
     # Importing the dataset
     imdb_data = pd.read_csv('IMDB.csv', delimiter=',')
-
-    # divide the dataset into train, test, and validation
-    #imdb_data = imdb_data.to_numpy()
-    #imdb_data = imdb_data.tolist()
 
     vectorizer = CountVectorizer(
     stop_words="english",
@@ -73,11 +69,9 @@ if __name__ == "__main__":
     for i in range(0, num_texts):
         cleaned_text.append(clean_text(imdb_data['review'][i]))
 
-    
-
     bow, name = create_bow(cleaned_text, vocabulary)
-    #bow = np.sum(bow, axis=0)
-
+    bow = np.sum(bow, axis=1)
+    print(bow)
 
 
     model = pd.DataFrame( 
@@ -85,8 +79,16 @@ if __name__ == "__main__":
     zip(bow, name))
     model.columns = ['Word', 'Count']
     #model.sort_values('Count', ascending=False, inplace=True)
-    model.head(10)
-    print(model, model.head(10))
+    print(model)
+
+    # divide the dataset into train, test, and validation
+    train_set = imdb_data['review'][:30000]
+    valid_set = imdb_data['review'][30000:40000]
+    test_set = imdb_data['review'][40000:]
+    
+    print("the lengths of three data set: train_set = %d, valid_set = %d, test_set = %d" % (len(train_set), len(valid_set), len(test_set)))
+    print(train_set[0])
+
 
 '''
     print("test")
