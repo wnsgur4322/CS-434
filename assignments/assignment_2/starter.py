@@ -31,29 +31,20 @@ def clean_text(text):
 
     return text
 
-def create_bow(input):
-    '''
+def create_bow(input, vocabulary):
     vectorizer = CountVectorizer(
         analyzer = "word",
         tokenizer=None,
         preprocessor=None,
         stop_words=None,
-        max_features=2000
+        #vocabulary=vocabulary,
+        max_features=1000
     )
-    '''
-    vectorizer = CountVectorizer(analyzer = "word",   \
-                             tokenizer = None,    \
-                             preprocessor = None, \
-                             stop_words = None,   \
-                             max_features = 2000) 
     bag_of_words = vectorizer.fit_transform(input)
-    #bag_of_words = bag_of_words.toarray()
-
-    #print(bag_of_words[0][0], bag_of_words[0][1], bag_of_words[1][0])
-    print(bag_of_words)
+    #np.asarray(bag_of_words)
+    bag_of_words = bag_of_words.toarray()
+    
     name = vectorizer.get_feature_names()
-    print(np.shape(name))
-    print(np.shape(bag_of_words))
 
     return bag_of_words, name
 
@@ -62,26 +53,59 @@ if __name__ == "__main__":
     imdb_data = pd.read_csv('IMDB.csv', delimiter=',')
 
     # divide the dataset into train, test, and validation
-    imdb_data = imdb_data.to_numpy()
-    imdb_data = imdb_data.tolist()
+    #imdb_data = imdb_data.to_numpy()
+    #imdb_data = imdb_data.tolist()
 
-    print(imdb_data[0][0])
-    
-    # this vectorizer will skip stop words
     vectorizer = CountVectorizer(
-        stop_words="english",
-        preprocessor=clean_text
+    stop_words="english",
+    preprocessor=clean_text
     )
 
     # fit the vectorizer on the text
-    vectorizer.fit(imdb_data[0])
-    print(len(imdb_data[0]))
-
-
+    vectorizer.fit(imdb_data['review'])
     # get the vocabulary
     inv_vocab = {v: k for k, v in vectorizer.vocabulary_.items()}
     vocabulary = [inv_vocab[i] for i in range(len(inv_vocab))]
-    print(vocabulary)
+
+
+    cleaned_text = []
+    num_texts = imdb_data['review'].size
+    for i in range(0, num_texts):
+        cleaned_text.append(clean_text(imdb_data['review'][i]))
+
+    
+
+    bow, name = create_bow(cleaned_text, vocabulary)
+    #bow = np.sum(bow, axis=0)
+
+
+
+    model = pd.DataFrame( 
+    (count, word) for word, count in
+    zip(bow, name))
+    model.columns = ['Word', 'Count']
+    #model.sort_values('Count', ascending=False, inplace=True)
+    model.head(10)
+    print(model, model.head(10))
+
+'''
+    print("test")
+    for i in range(0, len(imdb_data)):
+        cleaned_text += clean_text(imdb_data[i][0])
+        #print(cleaned_text)
+    print("test2")
+    bow, name = create_bow(cleaned_text)
+    print("test3")
+    model = pd.DataFrame( 
+    (count, word) for word, count in
+    zip(bow, name))
+    model.columns = ['Word', 'Count']
+    model.sort_values('Count', ascending=False, inplace=True)
+    model.head()
+
+'''
+    
+
 '''
     bow, name = create_bow(vocabulary)
     bow = np.sum(bow, axis=0)
