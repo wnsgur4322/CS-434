@@ -73,11 +73,43 @@ def total_num(reviews, pos_neg):
     print("The total number of words in all %s reviews: %d" % (pos_neg,res))
     return res
 
+# apply the multi-nomial Naive Bayes classifier with Laplace smooth (a = 1)
 def conditional_probability(model_type, total_num, index, pos_neg):
     # formula: (the number of words in class(pos or neg) + Laplace smooth (1)) / (total number of words in class + bag of words size (2000))
     res = float((model_type['Count'][index] + 1) / (total_num + 2000))
     print("P(%dth word | %s) : %f" % (index + 1, pos_neg, res))
     return res
+
+from functools import reduce
+# Question 3 part
+def MNB_valid(sentence, pos_CP, neg_CP, train_pos_prob, train_neg_prob):
+    res = []
+    for i in range(len(valid_set)):
+        sentence = list(map(str, clean_text(valid_set[i]).split(" ")))
+        #sentence = list(filter(('').__ne__, sentence))
+
+        word_count = []
+        for j in range(len(valid_model['Word'])):
+            count = 0
+            for h in range(len(sentence)):
+                if sentence[h] == valid_model['Word'][j]:
+                    count += 1
+            word_count.append(count)
+        print(len(word_count))
+ 
+        pos_pow_list = [wi ** n for wi, n in zip(pos_CP, word_count)]
+        neg_pow_list = [wi ** n for wi, n in zip(neg_CP, word_count)]
+        # P(Positive | Validation reviews) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....
+        pos_res = train_pos_prob * reduce(lambda x, y: x * y, pos_pow_list)
+        # P(Negative | Validation reviews) = train_neg_prob * neg_CP[word_1]^n * neg_CP[word_2] ....
+        neg_res = train_neg_prob * reduce(lambda x, y: x * y, neg_pow_list)
+
+        if pos_res > neg_res:
+            res.append("positive")
+        else:
+            res.append("negative")
+
+    return res        
 
 if __name__ == "__main__":
     # Importing the dataset
@@ -164,10 +196,36 @@ if __name__ == "__main__":
         pos_CP.append(conditional_probability(train_model, total_pos, i, "Positive"))
     
     #P(Wi...2000|Negative) Part
-    Neg_CP = []
+    neg_CP = []
     total_neg = total_num(train_neg, "Negative")
     for i in range(2000):
-        Neg_CP.append(conditional_probability(train_model, total_neg, i, "Negative"))
+        neg_CP.append(conditional_probability(train_model, total_neg, i, "Negative"))
+
+    # 3-1. Apply the learned Naive Bayes model to the validation set
+    # P(Positive | Validation review 1) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....
+
+    print("generating BOW for 10k (validation set) reviews ...")
+    bow_valid, name_valid = create_bow(cleaned_text[30000:40000], vocabulary)
+    bow_valid = np.sum(bow_valid, axis=0)
+
+    valid_model = pd.DataFrame( 
+    (count, word) for word, count in
+    zip(bow_valid, name_valid))
+    valid_model.columns = ['Word', 'Count']
+    print(valid_model)
+    print(len(valid_model))
+    print("done ... !")
+
+    validation_res = MNB_valid(valid_set, pos_CP, neg_CP, train_pos_prob, train_neg_prob)
+    print(validation_res)
+    
+    acc = 0
+    for i in range(10000):
+        if validation_res[i] == valid_label[i]:
+            acc += 1
+    print("validation accuracy: %f" % float(acc/10000))
+                
+                
 
 
 
