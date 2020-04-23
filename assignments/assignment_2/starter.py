@@ -8,6 +8,7 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 import re
 from collections import Counter
+import math
 
 def clean_text(text):
 
@@ -83,33 +84,38 @@ def conditional_probability(model_type, total_num, index, pos_neg):
 from functools import reduce
 # Question 3 part
 def MNB_valid(sentence, pos_CP, neg_CP, train_pos_prob, train_neg_prob):
-    res = []
-    for i in range(len(valid_set)):
-        sentence = list(map(str, clean_text(valid_set[i]).split(" ")))
-        #sentence = list(filter(('').__ne__, sentence))
-
+        #res = []
         word_count = []
+        
         for j in range(len(valid_model['Word'])):
             count = 0
             for h in range(len(sentence)):
                 if sentence[h] == valid_model['Word'][j]:
                     count += 1
             word_count.append(count)
+
         print(len(word_count))
- 
-        pos_pow_list = [wi ** n for wi, n in zip(pos_CP, word_count)]
-        neg_pow_list = [wi ** n for wi, n in zip(neg_CP, word_count)]
+
+
+        pos_pow_list = [math.log(wi) * n for wi, n in zip(pos_CP, word_count)]
+        pos_pow_list = list(filter((0.0).__ne__, pos_pow_list))
+
+        neg_pow_list = [math.log(wi) * n for wi, n in zip(neg_CP, word_count)]
+        neg_pow_list = list(filter((0.0).__ne__, neg_pow_list))
         # P(Positive | Validation reviews) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....
-        pos_res = train_pos_prob * reduce(lambda x, y: x * y, pos_pow_list)
+        
+        pos_res = math.log(train_pos_prob) + reduce(lambda x, y: x + y, pos_pow_list)
+        print(pos_res)
         # P(Negative | Validation reviews) = train_neg_prob * neg_CP[word_1]^n * neg_CP[word_2] ....
-        neg_res = train_neg_prob * reduce(lambda x, y: x * y, neg_pow_list)
+        neg_res = math.log(train_neg_prob) + reduce(lambda x, y: x + y, neg_pow_list)
+        print(neg_res)
 
         if pos_res > neg_res:
-            res.append("positive")
+            return("positive")
+            #res.append("positive")
         else:
-            res.append("negative")
-
-    return res        
+            return("negative")
+            #res.append("negative")
 
 if __name__ == "__main__":
     # Importing the dataset
@@ -118,7 +124,8 @@ if __name__ == "__main__":
 
     vectorizer = CountVectorizer(
     stop_words="english",
-    preprocessor=clean_text
+    preprocessor=clean_text,
+    max_features=2000
     )
 
     # fit the vectorizer on the text
@@ -216,14 +223,26 @@ if __name__ == "__main__":
     print(len(valid_model))
     print("done ... !")
 
-    validation_res = MNB_valid(valid_set, pos_CP, neg_CP, train_pos_prob, train_neg_prob)
-    print(validation_res)
+    sentences = []
+    for i in range(len(valid_set)):
+        valid_set[i] = clean_text(valid_set[i])
+        sentence = valid_set[i].split(" ")
+        sentence = list(filter(('').__ne__, sentence))
+        sentences.append(sentence)
+        print(i)
+    
+    print("done .. !")        
     
     acc = 0
-    for i in range(10000):
-        if validation_res[i] == valid_label[i]:
+    validation_res = []
+    for i in range(len(valid_set)):
+        validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
+        print(validation_res)
+    
+    for j in range(len(validation_res)):
+        if validation_res == valid_label[i]:
             acc += 1
-    print("validation accuracy: %f" % float(acc/10000))
+    print("validation accuracy: %f" % float(acc/50))
                 
                 
 
