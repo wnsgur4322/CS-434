@@ -83,16 +83,24 @@ def conditional_probability(model_type, total_num, index, pos_neg):
 
 from functools import reduce
 # Question 3 part
+def multiply(arr):
+    return reduce(lambda x, y: x * y, arr)
+
 def MNB_valid(sentence, pos_CP, neg_CP, train_pos_prob, train_neg_prob):
         #res = []
         word_count = []
         
         for j in range(len(valid_model['Word'])):
-            count = 0
+            #count = 0
+            
+            '''
             for h in range(len(sentence)):
                 if sentence[h] == valid_model['Word'][j]:
                     count += 1
-            word_count.append(count)
+
+            '''
+            #word_count.append(count)
+            word_count.append(sentence.count(valid_model['Word'][j]))
 
         print(len(word_count))
 
@@ -104,11 +112,14 @@ def MNB_valid(sentence, pos_CP, neg_CP, train_pos_prob, train_neg_prob):
         neg_pow_list = list(filter((0.0).__ne__, neg_pow_list))
         # P(Positive | Validation reviews) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....
         
-        pos_res = math.log(train_pos_prob) + reduce(lambda x, y: x + y, pos_pow_list)
+        #pos_res = math.log(train_pos_prob) + reduce(lambda x, y: x + y, pos_pow_list)
+        pos_res = train_pos_prob * multiply(pos_pow_list)
         print(pos_res)
         # P(Negative | Validation reviews) = train_neg_prob * neg_CP[word_1]^n * neg_CP[word_2] ....
-        neg_res = math.log(train_neg_prob) + reduce(lambda x, y: x + y, neg_pow_list)
+        #neg_res = math.log(train_neg_prob) + reduce(lambda x, y: x + y, neg_pow_list)
+        neg_res = train_neg_prob * multiply(neg_pow_list)
         print(neg_res)
+        
 
         if pos_res > neg_res:
             return("positive")
@@ -233,56 +244,18 @@ if __name__ == "__main__":
     
     print("done .. !")        
     
+    #print(valid_label)
+
+    #sys.end(1)
     acc = 0
     validation_res = []
     for i in range(len(valid_set)):
         validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
-        print(validation_res)
-    
+        print(i)
+    #print(validation_res)
+
     for j in range(len(validation_res)):
-        if validation_res == valid_label[i]:
+        if validation_res[j] == valid_label[j]:
             acc += 1
-    print("validation accuracy: %f" % float(acc/50))
+    print("validation accuracy(%): %f" % float(acc/100))
                 
-                
-
-
-
-
-'''
-    print("test")
-    for i in range(0, len(imdb_data)):
-        cleaned_text += clean_text(imdb_data[i][0])
-        #print(cleaned_text)
-    print("test2")
-    bow, name = create_bow(cleaned_text)
-    print("test3")
-    model = pd.DataFrame( 
-    (count, word) for word, count in
-    zip(bow, name))
-    model.columns = ['Word', 'Count']
-    model.sort_values('Count', ascending=False, inplace=True)
-    model.head()
-
-'''
-    
-
-'''
-    bow, name = create_bow(vocabulary)
-    bow = np.sum(bow, axis=0)
-    print(bow.shape)
-    #print(name)
-    model = pd.DataFrame( 
-        (count, word) for word, count in
-        zip(bow.T, name))
-    model.columns = ['Word', 'Count']
-    #model.sort_values('Count', ascending=False, inplace=True)
-    model.head()
-    print(model)
-    #model['voca'] = name
-    #model['count'] = bow[1]
-
-    #model.sort_values(by=['count'], ascending=False, inplace=True)
-    #print(model.head(10))
-
-'''
