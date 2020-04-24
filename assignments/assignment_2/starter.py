@@ -11,6 +11,7 @@ from collections import Counter
 import math
 from matplotlib import pyplot as plt
 import csv
+from decimal import Decimal
 
 def clean_text(text):
 
@@ -79,7 +80,7 @@ def total_num(reviews, pos_neg):
 # apply the multi-nomial Naive Bayes classifier with Laplace smooth (Q2: a = 1, Q4:a = 0 ... 2)
 def conditional_probability(model_type, total_num, index, pos_neg, alpha):
     # formula: (the number of words in class(pos or neg) + Laplace smooth (1)) / (&total number of words in class + &bag of words size (2000))
-    res = float((model_type['Count'][index] + alpha) / (total_num + 2000))
+    res = float((model_type['Count'][index] + alpha) / (total_num + (2000 * alpha)))
     return res
     #CP fomular: ((# of words appearances in pos or neg) + 1) / (total # of words in pos (duplication is counted)) + 2000)
 
@@ -273,7 +274,7 @@ if __name__ == "__main__":
         sentence = list(filter(('').__ne__, sentence))
         sentences.append(sentence)
     print("sentence separation is done .. !")        
-    '''
+
     acc = 0
     validation_res = []
     for i in range(len(valid_set)):
@@ -283,7 +284,7 @@ if __name__ == "__main__":
         if validation_res[j] == valid_label[j]:
             acc += 1
     print("validation accuracy: %f" % float(acc/100))
-    '''
+
     # 3-2. Apply the learned Naive Bayes model to the test set and predict
     print("generating BOW for 10k (test set) reviews ...")
     bow_test, name_test = create_bow(imdb_data['review'][40000:], vocabulary)
@@ -326,9 +327,8 @@ if __name__ == "__main__":
         # put rows
         write_csv.writerows(rows)
     print("test-prediction1.csv file is successfully created !")
-
-    # 4. Tuning smoothing parameter alpha. Train the Naive Bayes classifier with different values of α between 0 to 2 (incrementing by 0.2).
-    a = 0
+        
+        
     
 
     
