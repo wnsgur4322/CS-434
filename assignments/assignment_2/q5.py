@@ -37,14 +37,16 @@ def clean_text(text):
 
     return text
 
-def create_bow(input, vocabulary):
+def create_bow(input, vocabulary, max_d, min_d, max_f):
     vectorizer = CountVectorizer(
         analyzer = "word",
         tokenizer=None,
         preprocessor=clean_text,
         stop_words=None,
         vocabulary=vocabulary,
-        max_features=2000
+        max_df=max_d,
+        min_df=min_d,
+        max_features=max_f
     )
     bag_of_words = vectorizer.fit_transform(input)
     bag_of_words = bag_of_words.toarray()
@@ -157,6 +159,12 @@ def draw_plot(accs, a_val):
     return 0    
 
 if __name__ == "__main__":
+	
+	# Q5 parameters
+	max_d = 0.0		# max_df's default value is 1
+	min_d = 0.0		# min_df's default value is 1
+	max_f = 2000
+
     # Importing the dataset
     imdb_data = pd.read_csv('IMDB.csv', delimiter=',')
     label_data = pd.read_csv('IMDB_labels.csv', delimiter=',')
@@ -164,7 +172,9 @@ if __name__ == "__main__":
     vectorizer = CountVectorizer(
     stop_words="english",
     preprocessor=clean_text,
-    max_features=2000
+	max_df=max_d,
+	min_df=min_d,
+    max_features=max_f
     )
 
     # fit the vectorizer on the text
@@ -273,22 +283,19 @@ if __name__ == "__main__":
     print("sentence separation is done .. !")  
 
 	# 4. Tuning smoothing parameter alpha. Train the Naive Bayes classifier with different values of α between 0 to 2 (incrementing by 0.2).
-    a = Decimal('0')
-    step = Decimal('0.2')
-    a_val = []
     accs = []
 
     while a <= 2:
         pos_CP = []
         total_pos = total_num(train_pos, "Positive")
         for i in range(2000):
-                pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", a))
+                pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", 1))
 
         #P(Wi...2000|Negative) Part
         neg_CP = []
         total_neg = total_num(train_neg, "Negative")
         for i in range(2000):
-                neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", a))
+                neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", 1))
 
     # P(Positive | Validation review 1) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....      
 
@@ -306,8 +313,6 @@ if __name__ == "__main__":
         a_val.append(a)
         a += step
     
-
-    # draw and save the result plot
     draw_plot(accs, a_val)
 
     # 4-2. choose alpha which outputted best predction, predict with test data and write 'test-prediction2.csv' file
@@ -362,12 +367,12 @@ if __name__ == "__main__":
     field = ['sentiment']
     rows = test_predictions
     
-    with open("test-prediction2.csv", 'w') as csvfile:
+    with open("test-prediction3.csv", 'w') as csvfile:
         write_csv = csv.writer(csvfile)
         # put field
         write_csv.writerow(field)
         # put rows
         write_csv.writerows(rows)
-    print("test-prediction2.csv file is successfully created !")
+    print("test-prediction3.csv file is successfully created !")
         
         
