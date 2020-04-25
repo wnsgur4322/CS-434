@@ -160,10 +160,10 @@ def draw_plot(accs, a_val):
 
 if __name__ == "__main__":
 	
-	# Q5 parameters
-	max_d = 0.0		# max_df's default value is 1
-	min_d = 0.0		# min_df's default value is 1
-	max_f = 2000
+    # Q5 parameters
+    max_d = 1.0		# max_df's default value is 1
+    min_d = 1000		# min_df's default value is 1
+    max_f = 2000
 
     # Importing the dataset
     imdb_data = pd.read_csv('IMDB.csv', delimiter=',')
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     for i in range(0, num_texts):
         cleaned_text.append(clean_text(imdb_data['review'][i]))
 
-    bow, name = create_bow(imdb_data['review'], vocabulary)
+    bow, name = create_bow(imdb_data['review'], vocabulary, max_d, min_d, max_f)
     bow = np.sum(bow, axis=0)
 
     model = pd.DataFrame( 
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     print("done ... !")
 
     print("generating BOW for 30k (training set) reviews ...")
-    bow_train, name_train = create_bow(imdb_data['review'][:30000], vocabulary)
+    bow_train, name_train = create_bow(imdb_data['review'][:30000], vocabulary, max_d, min_d, max_f)
     bow_train = np.sum(bow_train, axis=0)
 
     train_model = pd.DataFrame( 
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     # P(Wi...2000|Positive) part
 
 	# BOW for postivie training
-    posbow_train, posname_train = create_bow(train_pos, vocabulary)
+    posbow_train, posname_train = create_bow(train_pos, vocabulary, max_d, min_d, max_f)
     posbow_train = np.sum(posbow_train, axis=0)
 
     postrain_model = pd.DataFrame( 
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     print(len(postrain_model))
     
 	# BOW for negative training
-    negbow_train, negname_train = create_bow(train_neg, vocabulary)
+    negbow_train, negname_train = create_bow(train_neg, vocabulary, max_d, min_d, max_f)
     negbow_train = np.sum(negbow_train, axis=0)
 
     negtrain_model = pd.DataFrame( 
@@ -262,7 +262,7 @@ if __name__ == "__main__":
 
 	# geneate valid (10k) BOW
     print("generating BOW for 10k (validation set) reviews ...")
-    bow_valid, name_valid = create_bow(imdb_data['review'][30000:40000], vocabulary)
+    bow_valid, name_valid = create_bow(imdb_data['review'][30000:40000], vocabulary, max_d, min_d, max_f)
     bow_valid = np.sum(bow_valid, axis=0)
 
     valid_model = pd.DataFrame( 
@@ -283,56 +283,31 @@ if __name__ == "__main__":
     print("sentence separation is done .. !")  
 
 	# 4. Tuning smoothing parameter alpha. Train the Naive Bayes classifier with different values of α between 0 to 2 (incrementing by 0.2).
-    accs = []
-
-    while a <= 2:
-        pos_CP = []
-        total_pos = total_num(train_pos, "Positive")
-        for i in range(2000):
-                pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", 1))
-
-        #P(Wi...2000|Negative) Part
-        neg_CP = []
-        total_neg = total_num(train_neg, "Negative")
-        for i in range(2000):
-                neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", 1))
-
-    # P(Positive | Validation review 1) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....      
-
-	# make preictions and calculate accuracy by comparing label file
-        acc = 0
-        validation_res = []
-        for i in range(len(valid_set)):
-            validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
-
-        for j in range(len(validation_res)):
-            if validation_res[j] == valid_label[j]:
-                acc += 1
-        print("validation accuracy: %f" % float(acc/100))
-        accs.append(acc)
-        a_val.append(a)
-        a += step
-    
-    draw_plot(accs, a_val)
-
-    # 4-2. choose alpha which outputted best predction, predict with test data and write 'test-prediction2.csv' file
-    best_index = 0
-    for i in range(len(accs)):
-        if accs[i] == max(accs):
-            best_index = i
-    best_a = a_val[best_index]
-
     pos_CP = []
     total_pos = total_num(train_pos, "Positive")
     for i in range(2000):
-        pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", best_a))
+            pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", 1))
 
     #P(Wi...2000|Negative) Part
     neg_CP = []
     total_neg = total_num(train_neg, "Negative")
     for i in range(2000):
-        neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", best_a))
+        neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", 1))
 
+    # P(Positive | Validation review 1) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....      
+
+	# make preictions and calculate accuracy by comparing label file
+    acc = 0
+    validation_res = []
+    for i in range(len(valid_set)):
+        validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
+
+    for j in range(len(validation_res)):
+        if validation_res[j] == valid_label[j]:
+            acc += 1
+    print("validation accuracy: %f" % float(acc/100))
+
+    '''
     print("generating BOW for 10k (test set) reviews ...")
     bow_test, name_test = create_bow(imdb_data['review'][40000:], vocabulary)
     bow_test = np.sum(bow_test, axis=0)
@@ -374,5 +349,4 @@ if __name__ == "__main__":
         # put rows
         write_csv.writerows(rows)
     print("test-prediction3.csv file is successfully created !")
-        
-        
+    '''
