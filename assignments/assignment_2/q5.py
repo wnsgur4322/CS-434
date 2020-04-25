@@ -44,9 +44,8 @@ def create_bow(input, vocabulary, max_d, min_d, max_f):
         preprocessor=clean_text,
         stop_words=None,
         vocabulary=vocabulary,
-        max_df=max_d,
-        min_df=min_d,
-        max_features=max_f
+        max_features=None,
+        min_df=min_d
     )
     bag_of_words = vectorizer.fit_transform(input)
     bag_of_words = bag_of_words.toarray()
@@ -82,7 +81,7 @@ def total_num(reviews, pos_neg):
 # apply the multi-nomial Naive Bayes classifier with Laplace smooth (Q2: a = 1, Q4:a = 0 ... 2)
 def conditional_probability(model_type, total_num, index, pos_neg, alpha):
     # formula: (the number of words in class(pos or neg) + Laplace smooth (1)) / (&total number of words in class + &bag of words size (2000))
-    res = float((model_type['Count'][index] + alpha) / (total_num + (2000 * alpha)))
+    res = float((model_type['Count'][index] + alpha) / (total_num + (len(vocabulary) * alpha)))
     return res
     #CP fomular: ((# of words appearances in pos or neg) + 1) / (total # of words in pos (duplication is counted)) + 2000)
 
@@ -161,8 +160,8 @@ def draw_plot(accs, a_val):
 if __name__ == "__main__":
 	
     # Q5 parameters
-    max_d = 1.0		# max_df's default value is 1
-    min_d = 1000		# min_df's default value is 1
+    max_d = None		# max_df's default value is 1
+    min_d = 2000		# min_df's default value is 1
     max_f = 2000
 
     # Importing the dataset
@@ -172,9 +171,8 @@ if __name__ == "__main__":
     vectorizer = CountVectorizer(
     stop_words="english",
     preprocessor=clean_text,
-	max_df=max_d,
-	min_df=min_d,
-    max_features=max_f
+    max_features=None,
+	min_df=min_d
     )
 
     # fit the vectorizer on the text
@@ -285,13 +283,13 @@ if __name__ == "__main__":
 	# 4. Tuning smoothing parameter alpha. Train the Naive Bayes classifier with different values of α between 0 to 2 (incrementing by 0.2).
     pos_CP = []
     total_pos = total_num(train_pos, "Positive")
-    for i in range(2000):
+    for i in range(len(vocabulary)):
             pos_CP.append(conditional_probability(postrain_model, total_pos, i, "Positive", 1))
 
     #P(Wi...2000|Negative) Part
     neg_CP = []
     total_neg = total_num(train_neg, "Negative")
-    for i in range(2000):
+    for i in range(len(vocabulary)):
         neg_CP.append(conditional_probability(negtrain_model, total_neg, i, "Negative", 1))
 
     # P(Positive | Validation review 1) = train_pos_prob * pos_CP[word_1]^n * pos_CP[word_2] ....      
