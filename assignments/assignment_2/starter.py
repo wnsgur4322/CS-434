@@ -212,7 +212,6 @@ if __name__ == "__main__":
     print("the positive probability of the word '%s' is %f " % (model['Word'][0], word_prob(train_model, train_pos, train_model['Word'][0], 0)))
     print("the negative probability of the word '%s' is %f " % (model['Word'][0], word_prob(train_model, train_neg, train_model['Word'][0], 0)))
 
-    # https://www.youtube.com/watch?v=km2LoOpdB3A
     # Conditional Probabilities: P(Wi...2000|Positive) & P(Wi...2000|Negative)
     # formula: (the number of words in class(pos or neg) + Laplace smooth (1)) / (total number of words in class + bag of words size (2000))
     # P(Wi...2000|Positive) part
@@ -279,6 +278,7 @@ if __name__ == "__main__":
     validation_res = []
     for i in range(len(valid_set)):
         validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
+        print("validation looping ... %d" % i)
 
     for j in range(len(validation_res)):
         if validation_res[j] == valid_label[j]:

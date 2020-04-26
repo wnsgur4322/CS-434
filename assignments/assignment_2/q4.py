@@ -297,6 +297,7 @@ if __name__ == "__main__":
         validation_res = []
         for i in range(len(valid_set)):
             validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
+            print("validation looping ... %d" % i)
 
         for j in range(len(validation_res)):
             if validation_res[j] == valid_label[j]:
@@ -340,6 +341,7 @@ if __name__ == "__main__":
     print(test_model)
     print("done ... !")
 
+    # make test sentences from test reviews (word by word)
     tsentences = []
     for i in range(len(test_set)):
         test_set[i] = clean_text(test_set[i])
@@ -347,7 +349,8 @@ if __name__ == "__main__":
         sentence = list(filter(('').__ne__, sentence))
         tsentences.append(sentence)
     print("done .. !")
-                
+
+    # apply multi-nomial naive bayes classifier with priors and conditional probabilities (positive and negative)                 
     test_predictions = []
 
     for i in range(len(test_set)):

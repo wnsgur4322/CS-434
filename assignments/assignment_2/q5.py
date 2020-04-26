@@ -160,9 +160,10 @@ def draw_plot(accs, a_val):
 if __name__ == "__main__":
 	
     # Q5 parameters
+    # we choose min_df = 5 or max_features = 37664 as the best prediction 
     max_d = None		# max_df's default value is 1
-    min_d = 2000		# min_df's default value is 1
-    max_f = 2000
+    min_d = 5		# min_df's default value is 1
+    max_f = 37664
 
     # Importing the dataset
     imdb_data = pd.read_csv('IMDB.csv', delimiter=',')
@@ -299,15 +300,16 @@ if __name__ == "__main__":
     validation_res = []
     for i in range(len(valid_set)):
         validation_res.append(MNB_valid(sentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
-
+        print("acc looping ... %d" % i)
+    
     for j in range(len(validation_res)):
         if validation_res[j] == valid_label[j]:
             acc += 1
     print("validation accuracy: %f" % float(acc/100))
-
-    '''
+    
+    # generrate BOW for test reviews (10k)
     print("generating BOW for 10k (test set) reviews ...")
-    bow_test, name_test = create_bow(imdb_data['review'][40000:], vocabulary)
+    bow_test, name_test = create_bow(imdb_data['review'][40000:], vocabulary, max_d, min_d, max_f)
     bow_test = np.sum(bow_test, axis=0)
 
     test_model = pd.DataFrame( 
@@ -318,6 +320,7 @@ if __name__ == "__main__":
     print(test_model)
     print("done ... !")
 
+    # make test sentences from test reviews (word by word)
     tsentences = []
     for i in range(len(test_set)):
         test_set[i] = clean_text(test_set[i])
@@ -328,6 +331,7 @@ if __name__ == "__main__":
                 
     test_predictions = []
 
+    # apply multi-nomial naive bayes classifier with priors and conditional probabilities (positive and negative) 
     for i in range(len(test_set)):
         test_predictions.append(prediction(tsentences[i], pos_CP, neg_CP, train_pos_prob, train_neg_prob))
         print("test looping ... %d" % i)
@@ -336,7 +340,7 @@ if __name__ == "__main__":
     print(test_predictions)
     print("done ... !")
 
-    # save the result of testing data prediction on test-prediction1.csv
+    # save the result of testing data prediction on test-prediction3.csv
     field = ['sentiment']
     rows = test_predictions
     
@@ -347,4 +351,3 @@ if __name__ == "__main__":
         # put rows
         write_csv.writerows(rows)
     print("test-prediction3.csv file is successfully created !")
-    '''
