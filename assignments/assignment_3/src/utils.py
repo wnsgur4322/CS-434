@@ -89,3 +89,4 @@ def zero_to_negone(y_train, y_test):
 		if y_test[i] == 0:
 			y_test[i] = -1
 	
+	return y_train, y_test
