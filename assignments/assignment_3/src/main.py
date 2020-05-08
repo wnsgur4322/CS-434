@@ -12,7 +12,7 @@ sns.set()
 
 import argparse
 
-from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info
+from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2
 from tree import DecisionTreeClassifier, RandomForestClassifier
 
 def load_args():
@@ -32,9 +32,10 @@ def county_info(args):
 	county_dict = load_dictionary(args.root_dir)
 	dictionary_info(county_dict)
 
-def decision_tree_testing(x_train, y_train, x_test, y_test):
-	print('Decision Tree\n\n')
-	clf = DecisionTreeClassifier(max_depth=20)
+def decision_tree_testing(x_train, y_train, x_test, y_test, max_depth):
+	print('Decision Tree\n')
+	
+	clf = DecisionTreeClassifier(max_depth)
 	clf.fit(x_train, y_train)
 	preds_train = clf.predict(x_train)
 	preds_test = clf.predict(x_test)
@@ -43,7 +44,13 @@ def decision_tree_testing(x_train, y_train, x_test, y_test):
 	print('Train {}'.format(train_accuracy))
 	print('Test {}'.format(test_accuracy))
 	preds = clf.predict(x_test)
+	preds_train =clf.predict(x_train)
+
+	print('F1 Train {}'.format(f1(y_train, preds_train)))
 	print('F1 Test {}'.format(f1(y_test, preds)))
+	
+	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds) 
+	
 
 def random_forest_testing(x_train, y_train, x_test, y_test):
 	print('Random Forest\n\n')
@@ -68,8 +75,26 @@ if __name__ == '__main__':
 	x_train, y_train, x_test, y_test = load_data(args.root_dir)
 	if args.county_dict == 1:
 		county_info(args)
+	
+	#decision tree
 	if args.decision_tree == 1:
-		decision_tree_testing(x_train, y_train, x_test, y_test)
+		train_accs = []
+		test_accs = []
+		f1_train_accs = []
+		f1_test_accs = []
+
+		for i in range(25):
+			print("depth : %d" % (i + 1))
+			train_acc, test_acc, f1_train_acc, f1_test_acc = decision_tree_testing(x_train, y_train, x_test, y_test, i + 1)
+			train_accs.append(train_acc * 100)
+			test_accs.append(test_acc * 100)
+			f1_train_accs.append(f1_train_acc * 100)
+			f1_test_accs.append(f1_test_acc * 100)
+		
+		# Q1 - D plot part
+		tree_draw_plot_1(train_accs, test_accs)
+		tree_draw_plot_2(f1_train_accs, f1_test_accs)
+
 	if args.random_forest == 1:
 		random_forest_testing(x_train, y_train, x_test, y_test)
 
