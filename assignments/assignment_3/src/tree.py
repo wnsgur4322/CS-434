@@ -146,32 +146,34 @@ class DecisionTreeClassifier():
 			########################################
 			#       YOUR CODE GOES HERE            #
 			########################################
-			print(left_y, right_y)
+
+			# For U(AL) part
 			l_pos = np.count_nonzero(left_y == 1)
 			l_neg = len(left_y) - l_pos
+
+			# For U(AR) part
 			r_pos = np.count_nonzero(right_y == 1)
 			r_neg = len(right_y) - r_pos
+
+			# For U(A) part
 			t_pos = np.count_nonzero(y == 1)
 			t_neg = len(y) - t_pos
 
+			# U(A) part
 			u_top = 1 - (t_pos/len(y))**2 - (t_neg/len(y))**2
+			# U(AL) part = 1 - (p_p)^2 - (p_n)^2
 			u_left = 1 - (l_pos/len(left_y))**2 - (l_neg/len(left_y))**2
+			# U(AR) part = 1 - (p_p)^2 - (p_n)^2
 			u_right = 1 - (r_pos/len(right_y))**2 - (r_neg/len(right_y))**2
-
+			
+			# B = U(A) − plU(AL) − prU(AR)
 			gain = u_top - ((len(left_y)/len(y))*u_left) - ((len(right_y)/len(y))*u_right)
-
 			
 			return gain
 		# we hit leaf node
 		# don't have any gain, and don't want to divide by 0
 		else:
 			return 0
-	
-	def u_measure(self, left_y, right_y):
-		total_sum = len(left_y) + len(right_y)
-		gain = 1-(len(left_y)/total_sum)*(len(left_y)/total_sum)-(len(right_y)/total_sum)*(len(right_y)/total_sum)
-
-		return gain
 
 class RandomForestClassifier():
 	"""
