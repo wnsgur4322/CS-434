@@ -210,14 +210,14 @@ class RandomForestClassifier():
 	def fit(self, X, y):
 		bagged_X, bagged_y = self.bag_data(X, y)
 		feat_idx = []
-		forest = []
+		self.forest = []
 
 		print('Fitting Random Forest...\n')
 		for i in range(self.n_trees):
 			feat_idx = random.sample(range(51), self.max_features)
 			tr = DecisionTreeClassifier(max_depth = self.max_depth)
 			tr.fit(bagged_X[i], bagged_y[i], feat_idx = feat_idx)
-			forest.append([tr])
+			self.forest.append(tr)
 			
 		
 		
@@ -237,14 +237,14 @@ class RandomForestClassifier():
 
 	def predict(self, X):
 		preds = []
+		preds = np.zeros(len(X)).astype(int)
 
-		# remove this one \/
-		preds = np.ones(len(X)).astype(int)
-		# ^that line is only here so the code runs
-
-		##################
-		# YOUR CODE HERE #
-		##################
+		for i in range(self.n_trees):
+			preds = preds + self.forest[i].predict(X)
+            
+		vote = self.n_trees/2
+		preds = np.where(preds>=vote,1,0)
+		
 		return preds
 
 
