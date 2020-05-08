@@ -68,11 +68,13 @@ def random_forest_testing(x_train, y_train, x_test, y_test):
 
 def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
 	print('Ada Boost')
-	y_tain, y_test = zero_to_negone(y_train, y_test)
 	aba = AdaBoostClassifier(num_learner)
 	aba.fit(x_train, y_train)
 	preds_train = aba.predict(x_train)
 	preds_test = aba.predict(x_test)
+
+	print(preds_train, preds_test)
+
 	train_accuracy = accuracy_score(preds_train, y_train)
 	test_accuracy = accuracy_score(preds_test, y_test)
 	print('Train {}'.format(train_accuracy))
@@ -123,7 +125,9 @@ if __name__ == '__main__':
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
-	zero_to_negone(y_train, y_test)
+	if args.aba_boost == 0:
+		zero_to_negone(y_train, y_test)
+		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 
 	print('Done')
 	
