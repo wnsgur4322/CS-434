@@ -12,7 +12,7 @@ sns.set()
 
 import argparse
 
-from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2
+from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2, zero_to_negone
 from tree import DecisionTreeClassifier, RandomForestClassifier
 
 def load_args():
@@ -78,7 +78,7 @@ if __name__ == '__main__':
 		county_info(args)
 	
 	#decision tree
-	if args.decision_tree == 1:
+	if args.decision_tree == 0:
 		train_accs = []
 		test_accs = []
 		f1_train_accs = []
@@ -105,8 +105,13 @@ if __name__ == '__main__':
 			res.close()
 		print("accuracy_result.txt created !\n")
 
-	if args.random_forest == 1:
+	if args.random_forest == 0:
 		random_forest_testing(x_train, y_train, x_test, y_test)
+
+
+	# Part 3 - Ada Boosting
+	# part 3 - A
+	zero_to_negone(y_train, y_test)
 
 	print('Done')
 	

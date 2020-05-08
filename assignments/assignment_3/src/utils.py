@@ -77,3 +77,15 @@ def tree_draw_plot_2(f1_train_accs, f1_test_accs):
 	plt.show()
 
 	return 0
+
+
+# this function is for chainging 0 label to -1 for AdaBoost
+def zero_to_negone(y_train, y_test):
+	for i in range(len(y_train)):
+		if y_train[i] == 0:
+			y_train[i] = -1
+	
+	for i in range(len(y_test)):
+		if y_test[i] == 0:
+			y_test[i] = -1
+	
