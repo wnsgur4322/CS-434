@@ -66,9 +66,10 @@ def random_forest_testing(x_train, y_train, x_test, y_test):
 	preds = rclf.predict(x_test)
 	print('F1 Test {}'.format(f1(y_test, preds)))
 
-def ada_boost_testing(x_train, y_train, x_test, y_test):
+def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
 	print('Ada Boost')
-	aba = AdaBoostClassifier()
+	y_tain, y_test = zero_to_negone(y_train, y_test)
+	aba = AdaBoostClassifier(num_learner)
 	aba.fit(x_train, y_train)
 	preds_train = aba.predict(x_train)
 	preds_test = aba.predict(x_test)
