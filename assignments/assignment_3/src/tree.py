@@ -5,6 +5,7 @@
 # Youngjoo Lee, leey3@oregonstate.edu
 
 import numpy as np
+import random
 
 class Node():
 	"""
@@ -46,9 +47,11 @@ class DecisionTreeClassifier():
 
 	# take in features X and labels y
 	# build a tree
-	def fit(self, X, y):
+	def fit(self, X, y, feat_idx = None):
 		self.num_classes = len(set(y))
-		self.root = self.build_tree(X, y, depth=1)
+		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx)
+	
+
 
 	# make prediction for each example of features X
 	def predict(self, X):
@@ -74,10 +77,13 @@ class DecisionTreeClassifier():
 		return accuracy
 
 	# function to build a decision tree
-	def build_tree(self, X, y, depth):
+	def build_tree(self, X, y, depth, feat_idx = None):
 		num_samples, num_features = X.shape
 		# which features we are considering for splitting on
-		self.features_idx = np.arange(0, X.shape[1])
+		if feat_idx == None:
+			self.features_idx = np.arange(0, X.shape[1])
+		else:
+			self.features_idx = feat_idx			
 
 		# store data and information about best split
 		# used when building subtrees recursively
@@ -203,22 +209,27 @@ class RandomForestClassifier():
 	# fit all trees
 	def fit(self, X, y):
 		bagged_X, bagged_y = self.bag_data(X, y)
+		feat_idx = []
+		forest = []
+
 		print('Fitting Random Forest...\n')
 		for i in range(self.n_trees):
-			print(i+1, end='\t\r')
-			##################
-			# YOUR CODE HERE #
-			##################
-		print()
+			feat_idx = random.sample(range(51), self.max_features)
+			tr = DecisionTreeClassifier(max_depth = self.max_depth)
+			tr.fit(bagged_X[i], bagged_y[i], feat_idx = feat_idx)
+			forest.append([tr])
+			
+		
+		
 
 	def bag_data(self, X, y, proportion=1.0):
 		bagged_X = []
 		bagged_y = []
+		
 		for i in range(self.n_trees):
-			continue
-			##################
-			# YOUR CODE HERE #
-			##################
+			randList = random.choices(range(0,2097), k=2098)
+			bagged_X.append(X[randList])
+			bagged_y.append(y[randList])
 
 		# ensure data is still numpy arrays
 		return np.array(bagged_X), np.array(bagged_y)
