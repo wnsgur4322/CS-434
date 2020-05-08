@@ -400,11 +400,12 @@ class DecisionTreeAdaBoost():
 
 
 class AdaBoostClassifier():
-	def __init__(self):
+	def __init__(self, num_learner):
+		self.num_learner = num_learner
 		self.alphas = None
         self.stumps = None
 
-	def fit(self, X, y, feat_idx = None):
+	def fit(self, X, y):
 		stumps = []
 
 		#initialize weights
@@ -414,7 +415,7 @@ class AdaBoostClassifier():
 		alphas = []
 
 
-		for i in range(X):
+		for i in range(self.num_learner):
 			tree = DecisionTreeClassifier(1)
 
 			stump = tree.fit(X, y)
@@ -442,8 +443,10 @@ class AdaBoostClassifier():
 		self.stumps = stumps
 
 	def predict(self, X):
-		preds = []	
+		preds = []
+		predictions = []
 		for alpha, stump in zip(self.alphas, self.stumps):
 			pred = alpha*stump.predict(X)
 			preds.append(pred)
-		return np.sign(np.sum(np.array(preds),axis = 0))
+			predictions.append(np.sign(np.sum(np.array(predictions),axis=0)))
+		return predictions
