@@ -6,6 +6,7 @@
 
 import numpy as np
 import random
+import pandas as pd
 
 class Node():
 	"""
@@ -248,20 +249,188 @@ class RandomForestClassifier():
 		return preds
 
 
+
 ################################################
 # YOUR CODE GOES IN ADABOOSTCLASSIFIER         #
 # MUST MODIFY THIS EXISTING DECISION TREE CODE #
 ################################################
-class AdaBoostClassifier():
+class DecisionTreeAdaBoost():
 	def __init__(self):
-		pass
+		self.max_depth = 1 # The depth is 1 = Decision Stump.
+
+	# take in features X and labels y
+	# build a tree
+
+	
+	def fit(self, X, y, feat_idx):
+		self.num_classes = len(set(y))
+		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx)
+		'''
+		feat_idx = random.sample(range(51), 51)
+		stumps = []
+		for i in range(0, 50):
+			tr = DecisionTreeClassifier(max_depth = 1)
+			tr.fit(X, y, feat_idx = feat_idx[i])
+			stumps.append([tr])
+		'''
+	# make prediction for each example of features X
+	def predict(self, X):
+		preds = [self._predict(example) for example in X]
+
+		return preds
+	'''
+	def predict(self, X, alphas):
+		preds = []
+		for example, alpha in zip(alphas, X):
+			preds.append(self._predict(example)*alpha)
+
+		return preds
+	'''
+	# prediction for a given example
+	# traverse tree by following splits at nodes
+	def _predict(self, example):
+		node = self.root
+		while node.left_tree:
+			if example[node.feature] < node.split:
+				node = node.left_tree
+			else:
+				node = node.right_tree
+		return node.prediction
+
+	# accuracy
+	def accuracy_score(self, X, y):
+		preds = self.predict(X)
+		accuracy = (preds == y).sum()/len(y)
+		return accuracy
+
+	# function to build a decision stump
+	def build_tree(self, X, y, depth, feat_idx):
+		num_samples, num_features = X.shape
+		# which features we are considering for splitting on
+		self.features_idx = feat_idx			
+
+		# store data and information about best split
+		# used when building subtrees recursively
+		best_feature = feat_idx
+		best_split = None
+		best_err = 1.0
+		best_left_X = None
+		best_left_y = None
+		best_right_X = None
+		best_right_y = None
+
+		# what we would predict at this node if we had to
+		# majority class
+		num_samples_per_class = [np.sum(y == i) for i in range(self.num_classes)]
+		prediction = np.argmax(num_samples_per_class)
+
+		# if we haven't hit the maximum depth, keep building
+		if depth <= self.max_depth:
+			# consider each feature
+			# consider the set of all values for that feature to split on
+			possible_splits = np.unique(X[:, feat_idx])
+			print("possible_splits", possible_splits, "|| Print depth: ", depth, self.max_depth)
+			for split in possible_splits:
+				# get the gain and the data on each side of the split
+				# >= split goes on right, < goes on left
+				err, left_X, right_X, left_y, right_y = self.check_split(X, y, feat_idx, split)
+				# if we have a better gain, use this split and keep track of data
+				print("test", err, best_err)
+				if err < best_err and err != 0:
+					best_err = err
+					best_feature = feat_idx
+					best_split = split
+					best_left_X = left_X
+					best_right_X = right_X
+					best_left_y = left_y
+					best_right_y = right_y
+
+		print("three values: ", prediction, best_feature, best_split, best_left_X, "right", best_right_X)
+		# if we did hit a leaf node
+		print("Node", Node(prediction=prediction, feature=best_feature, split=best_split, left_tree=None, right_tree=None).left_tree)
+		return Node(prediction=prediction, feature=best_feature, split=best_split, left_tree=None, right_tree=None)
 
 
+	# gets data corresponding to a split by using numpy indexing
+	def check_split(self, X, y, feature, split):
+		left_idx = np.where(X[:, feature] < split)
+		right_idx = np.where(X[:, feature] >= split)
+		left_X = X[left_idx]
+		right_X = X[right_idx]
+		left_y = y[left_idx]
+		right_y = y[right_idx]
+
+		# calculate gini impurity and gain for y, left_y, right_y
+		err = self.calculate_weighted_err(y, left_y, right_y)
+		return err, left_X, right_X, left_y, right_y
+
+	def calculate_weighted_err(self, y, left_y, right_y):
+		# not a leaf node
+		# calculate gini impurity and gain
+		err = 0
+		if len(left_y) > 0 and len(right_y) > 0:
+			l_neg = np.count_nonzero(left_y == -1)
+			r_pos = np.count_nonzero(right_y == 1)
+
+			err = (l_neg+r_pos)/len(y)
+
+			return err
+		# we hit leaf node
+		# don't have any gain, and don't want to divide by 0
+		else:
+			return 0
 
 
+class AdaBoostClassifier():
+	def __init__(self, num_learner):
+		self.num_learner = num_learner
+		self.alphas = None
+		self.stumps = None
+
+	def fit(self, X, y):
+		stumps = []
+
+		#initialize weights
+		evaluations = pd.DataFrame(y.copy())
+		# set all weights as 1/n (initial weights)
+		evaluations['weights'] = 1/len(y)
+		alphas = []
+		feat_idx = []
+		feat_idx = random.sample(range(51), 51)
+
+		for i in range(self.num_learner):
+			tree = DecisionTreeAdaBoost()
+			stump = tree.fit(X, y, feat_idx = feat_idx[i])
+			print(feat_idx)
+			print(stump, feat_idx[i])
+			stumps.append(stump)
+			print(stump)
+			predictions = stump.predict(X)
+
+			evaluations['predictions'] = predictions
+			evaluations['evaluation'] = np.where(evaluations['predictions'] == evaluations['target'], 1, 0)
+			evaluations['misclassified'] = np.where(evaluations['predictions'] != evaluations['target'],1,0)
+
+			accuracy = sum(evaluations['evaluation'])/len(evaluations['evaluation'])
+			miss = sum(evaluations['misclassified'])/len(evaluations['misclassified'])
+
+			err = np.sum(evaluations['weights']*evaluations['misclassified'])/np.sum(evaluations['weights'])
 
 
+			alpha = (1/2)*np.log((1-err)/err)
+			alphas.append(alpha)
 
 
+			evaluations['weights'] *= np.exp(alpha*evaluations['misclassified'])
 
+		self.alphas = alphas
+		self.stumps = stumps
 
+	def predict(self, X):
+		preds = []
+		predictions = []
+		for alpha, stump in zip(self.alphas, self.stumps):
+			pred = alpha*stump.predict(X)
+			preds.append(pred)
+			predictions.append(np.sign(np.sum(np.array(predictions),axis=0)))
+		return predictions
