@@ -13,7 +13,7 @@ sns.set()
 import argparse
 
 from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2, zero_to_negone
-from tree import DecisionTreeClassifier, RandomForestClassifier
+from tree import DecisionTreeClassifier, RandomForestClassifier, AdaBoostClassifier
 
 def load_args():
 
@@ -66,7 +66,22 @@ def random_forest_testing(x_train, y_train, x_test, y_test):
 	preds = rclf.predict(x_test)
 	print('F1 Test {}'.format(f1(y_test, preds)))
 
+def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
+	print('Ada Boost')
+	print(x_train, y_train)
+	aba = AdaBoostClassifier(num_learner)
+	aba.fit(x_train, y_train)
+	preds_train = aba.predict(x_train)
+	preds_test = aba.predict(x_test)
 
+	print(preds_train, preds_test)
+
+	train_accuracy = accuracy_score(preds_train, y_train)
+	test_accuracy = accuracy_score(preds_test, y_test)
+	print('Train {}'.format(train_accuracy))
+	print('Test {}'.format(test_accuracy))
+	preds = aba.predict(x_test)
+	print('F1 Test {}'.format(f1(y_test, preds)))
 
 ###################################################
 # Modify for running your experiments accordingly #
@@ -76,7 +91,7 @@ if __name__ == '__main__':
 	x_train, y_train, x_test, y_test = load_data(args.root_dir)
 	if args.county_dict == 1:
 		county_info(args)
-
+	
 	#decision tree
 	if args.decision_tree == 0:
 		train_accs = []
@@ -105,13 +120,15 @@ if __name__ == '__main__':
 			res.close()
 		print("accuracy_result.txt created !\n")
 
-	if args.random_forest == 1:
+	if args.random_forest == 0:
 		random_forest_testing(x_train, y_train, x_test, y_test)
 
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
-	zero_to_negone(y_train, y_test)
+	if args.ada_boost == 1:
+		zero_to_negone(y_train, y_test)
+		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 
 	print('Done')
 	
