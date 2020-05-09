@@ -261,6 +261,8 @@ class DecisionTreeAdaBoost():
 	# build a tree
 	def fit(self, X, y, feat_idx = None):
 		self.num_classes = len(set(y))
+		feat_idx = []
+		feat_idx = random.sample()
 		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx)
 	
 	# make prediction for each example of features X
@@ -403,24 +405,25 @@ class AdaBoostClassifier():
 	def __init__(self, num_learner):
 		self.num_learner = num_learner
 		self.alphas = None
-        self.stumps = None
+		self.stumps = None
 
 	def fit(self, X, y):
 		stumps = []
 
 		#initialize weights
-		evaluations['weights'] = pd.DataFrame(y.copy())
+		evaluations = pd.DataFrame(y.copy())
 		# set all weights as 1/n (initial weights)
-		evaluations['weights'] = 1/len(self.dataset)
+		evaluations['weights'] = 1/len(y)
 		alphas = []
-
+		feat_idx = []
+		feat_idx = random.sample(range(51), 51)
 
 		for i in range(self.num_learner):
-			tree = DecisionTreeClassifier(1)
-
-			stump = tree.fit(X, y)
+			tree = DecisionTreeClassifier(max_depth = 1)
+			stump = tree.fit(X, y, feat_idx = feat_idx[i])
+			print(feat_idx)
 			stumps.append(stump)
-
+			print(stump)
 			predictions = stump.predict(X)
 
 			evaluations['predictions'] = predictions
