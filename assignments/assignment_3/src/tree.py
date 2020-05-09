@@ -303,6 +303,10 @@ class DecisionTreeAdaBoost():
 		accuracy = (preds == y).sum()/len(y)
 		return accuracy
 
+
+	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+	# Need to make one node tree
+	# Working!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	# function to build a decision stump
 	def build_tree(self, X, y, depth, feat_idx):
 		num_samples, num_features = X.shape
