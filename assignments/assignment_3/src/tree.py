@@ -389,12 +389,13 @@ class DecisionTreeAdaBoost():
 		t_product = y*w
 
 		if len(left_y) > 0 and len(right_y) > 0:
+			# For U(AL) part
 			l_pos = sum([a for a in l_product if a >= 0])
 			l_neg = abs(sum([a for a in l_product if a < 0]))
 			l_pos_p = l_pos / (l_pos+l_neg)
 			l_neg_p = l_neg / (l_pos+l_neg)
 
-
+			# For U(AR) part
 			r_pos = sum([a for a in r_product if a >= 0])
 			r_neg = abs(sum([a for a in r_product if a < 0]))
 			r_pos_p = r_pos / (r_pos+r_neg)
@@ -453,11 +454,9 @@ class AdaBoostClassifier():
 			err = np.sum(weights*missclassified)/np.sum(weights)
 
 			alpha = (1/2)*np.log((1-err)/err)
-			print("ALPHA: ", alpha, err)
 			alphas.append(alpha)
 			weights *= np.exp(alpha*missclassified)
 			sum_weights = sum(weights)
-			print(weights/sum_weights)
 			weights = weights/sum_weights
 
 		self.alphas = alphas
@@ -466,7 +465,6 @@ class AdaBoostClassifier():
 	def predict(self, X):
 		preds = []
 		predictions = []
-		print(len(self.alphas), len(self.stumps))
 		for i in range(len(self.stumps)):
 			pred = np.asarray(self.stumps[i].predict(X)) * self.alphas[i]
 			preds.append(pred)
