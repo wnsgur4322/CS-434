@@ -72,22 +72,23 @@ def random_forest_testing(x_train, y_train, x_test, y_test, n_trees, max_feature
 
 	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
 
-def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
+def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner):
 	print('Ada Boost')
-	print(x_train, y_train)
 	aba = AdaBoostClassifier(num_learner)
 	aba.fit(x_train, y_train)
 	preds_train = aba.predict(x_train)
 	preds_test = aba.predict(x_test)
-
-	print(preds_train, preds_test)
-
 	train_accuracy = accuracy_score(preds_train, y_train)
 	test_accuracy = accuracy_score(preds_test, y_test)
 	print('Train {}'.format(train_accuracy))
 	print('Test {}'.format(test_accuracy))
 	preds = aba.predict(x_test)
+	preds_train = aba.predict(x_train)
+
+	print('F1 Train {}'.format(f1(y_train, preds_train)))
 	print('F1 Test {}\n'.format(f1(y_test, preds)))
+
+   	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
 
 ###################################################
 # Modify for running your experiments accordingly #
@@ -147,13 +148,12 @@ if __name__ == '__main__':
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_b")
 
 		#Q2 - D part
-		# looping max_features
 		forest_train_accs = []
 		forest_test_accs = []
 		forest_f1_train_accs = []
 		forest_f1_test_accs = []
 
-		# looping n_trees
+		# looping max_features
 		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
 		for i in max_features:
 			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 50, i)
@@ -166,13 +166,34 @@ if __name__ == '__main__':
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
 
+		#Q2 - E part
+		# looping max_features
+		forest_train_accs = []
+		forest_test_accs = []
+		forest_f1_train_accs = []
+		forest_f1_test_accs = []
+
 		
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
 	if args.ada_boost == 1:
+		adaboost_train_accs = []
+		adaboost_test_accs = []
+		adaboost_f1_train_accs = []
+		adaboost_f1_test_accs = []
+	
 		zero_to_negone(y_train, y_test)
-		print(y_train)
-		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 
+		#Q3 - E
+		for i in range(10, 210, 10):
+			adaboost_train_acc, adaboost_test_acc, adaboost_f1_train_acc, adaboost_f1_test_acc = ada_boost_testing(x_train, y_train, x_test, y_test, i)
+			adaboost_train_accs.append(adaboost_train_acc * 100)
+			adaboost_test_accs.append(adaboost_test_acc * 100)
+			adaboost_f1_train_accs.append(adaboost_f1_train_acc * 100)
+			adaboost_f1_test_accs.append(adaboost_f1_test_acc * 100)
+		#Q3 - F
+		draw_plot_1(adaboost_train_accs, adaboost_test_accs, "ADA_f")
+		draw_plot_2(adaboost_f1_train_accs, adaboost_f1_test_accs, "ADA_f")
+	
 	print('Done')
