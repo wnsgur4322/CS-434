@@ -13,7 +13,7 @@ sns.set()
 import argparse
 
 from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2, zero_to_negone
-from tree import DecisionTreeClassifier, RandomForestClassifier, AdaBoostClassifier
+from tree_adatest import DecisionTreeClassifier, RandomForestClassifier, AdaBoostClassifier
 
 def load_args():
 

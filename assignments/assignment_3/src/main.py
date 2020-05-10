@@ -12,7 +12,7 @@ sns.set()
 
 import argparse
 
-from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, tree_draw_plot_1, tree_draw_plot_2, zero_to_negone
+from utils import load_data, f1, accuracy_score, load_dictionary, dictionary_info, draw_plot_1, draw_plot_2, zero_to_negone
 from tree import DecisionTreeClassifier, RandomForestClassifier, AdaBoostClassifier
 
 def load_args():
@@ -53,9 +53,10 @@ def decision_tree_testing(x_train, y_train, x_test, y_test, max_depth):
 	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds) 
 	
 
-def random_forest_testing(x_train, y_train, x_test, y_test):
-	print('Random Forest\n\n')
-	rclf = RandomForestClassifier(max_depth=7, max_features=11, n_trees=50)
+def random_forest_testing(x_train, y_train, x_test, y_test, n_trees, max_features):
+	print('Random Forest')
+	print("max_depth: %d, max_features: %d, n_trees: %d" % (7,max_features, n_trees))
+	rclf = RandomForestClassifier(n_trees, max_features, max_depth=7)
 	rclf.fit(x_train, y_train)
 	preds_train = rclf.predict(x_train)
 	preds_test = rclf.predict(x_test)
@@ -64,7 +65,12 @@ def random_forest_testing(x_train, y_train, x_test, y_test):
 	print('Train {}'.format(train_accuracy))
 	print('Test {}'.format(test_accuracy))
 	preds = rclf.predict(x_test)
-	print('F1 Test {}'.format(f1(y_test, preds)))
+	preds_train = rclf.predict(x_train)
+
+	print('F1 Train {}'.format(f1(y_train, preds_train)))
+	print('F1 Test {}\n'.format(f1(y_test, preds)))
+
+	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
 
 def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
 	print('Ada Boost')
@@ -81,7 +87,7 @@ def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner = 50):
 	print('Train {}'.format(train_accuracy))
 	print('Test {}'.format(test_accuracy))
 	preds = aba.predict(x_test)
-	print('F1 Test {}'.format(f1(y_test, preds)))
+	print('F1 Test {}\n'.format(f1(y_test, preds)))
 
 ###################################################
 # Modify for running your experiments accordingly #
@@ -107,8 +113,8 @@ if __name__ == '__main__':
 			f1_test_accs.append(f1_test_acc * 100)
 		
 		# Q1 - D plot part
-		tree_draw_plot_1(train_accs, test_accs)
-		tree_draw_plot_2(f1_train_accs, f1_test_accs)
+		draw_plot_1(train_accs, test_accs, "DT")
+		draw_plot_2(f1_train_accs, f1_test_accs, "DT")
 		
 		# Q1 - E part
 		print("The best accuracies (train, test, F1_train, F1_test): %f %f %f %f" % (max(train_accs), max(test_accs), max(f1_train_accs), max(f1_test_accs)))
@@ -120,13 +126,52 @@ if __name__ == '__main__':
 			res.close()
 		print("accuracy_result.txt created !\n")
 
-	if args.random_forest == 0:
-		random_forest_testing(x_train, y_train, x_test, y_test)
+	# Part 2 - Random Forest
+	if args.random_forest == 1:
+		forest_train_accs = []
+		forest_test_accs = []
+		forest_f1_train_accs = []
+		forest_f1_test_accs = []
 
+		#Q2 - B part
+		# looping n_trees
+		for i in range(10, 210, 10):
+			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, i, 11)
+			forest_train_accs.append(forest_train_acc * 100)
+			forest_test_accs.append(forest_test_acc * 100)
+			forest_f1_train_accs.append(forest_f1_train_acc * 100)
+			forest_f1_test_accs.append(forest_f1_test_acc * 100)
+		
+		#Q2 - B plot
+		draw_plot_1(forest_train_accs, forest_test_accs, "RF_b")
+		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_b")
+
+		#Q2 - D part
+		# looping max_features
+		forest_train_accs = []
+		forest_test_accs = []
+		forest_f1_train_accs = []
+		forest_f1_test_accs = []
+
+		#Q2 - B part
+		# looping n_trees
+		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
+		for i in max_features:
+			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 50, i)
+			forest_train_accs.append(forest_train_acc * 100)
+			forest_test_accs.append(forest_test_acc * 100)
+			forest_f1_train_accs.append(forest_f1_train_acc * 100)
+			forest_f1_test_accs.append(forest_f1_test_acc * 100)
+		
+		#Q2 - B plot
+		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
+		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
+
+		
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
-	if args.ada_boost == 1:
+	if args.ada_boost == 0:
 		zero_to_negone(y_train, y_test)
 		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 

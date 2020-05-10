@@ -43,38 +43,101 @@ def f1(y, yhat):
 ###########################################################################
 
 # this function is for drawing plot between tree depth and training/test performance
-def tree_draw_plot_1(train_accs, test_accs):
-	depth_list = list(range(1, 26))
-	plt.plot(
-		# training ASE drew with red solid line
-		depth_list, train_accs, 'r-',
-		depth_list, test_accs, 'b-'
-	)
-	plt.legend(['train_accuracy', 'test_accuracy'])
-	plt.xlabel('decision tree depth value (1 ~ 25)')
-	plt.ylabel('accuracy %')
+def draw_plot_1(train_accs, test_accs, algorithm):
+	if algorithm == "DT":
+		depth_list = list(range(1, 26))
+		plt.plot(
+			# training ASE drew with red solid line
+			depth_list, train_accs, 'r-',
+			depth_list, test_accs, 'b-'
+		)
+		plt.legend(['train_accuracy', 'test_accuracy'])
+
+		plt.xlabel('Decision tree depth value (1 ~ 25)')
+		plt.ylabel('accuracy %')
 	# save the plot as a png file
-	plt.savefig('tree_accuracy_vs_tree_depth.png')
-	print("tree_accuracy_vs_tree_depth.png is created successfully!")
-	plt.show()
+		plt.savefig('tree_accuracy_vs_tree_depth.png')
+		print("tree_accuracy_vs_tree_depth.png is created successfully!")
+		plt.show()
+	
+	if algorithm == "RF_b":
+		n_trees = list(range(10, 210, 10))
+		plt.plot(
+			# training ASE drew with red solid line
+			n_trees, train_accs, 'r-',
+			n_trees, test_accs, 'b-'
+		)
+		plt.legend(['train_accuracy', 'test_accuracy'])
+		plt.xlabel('Random forest n_trees (10, 20, 30 .. 200)')
+		plt.ylabel('accuracy %')
+	# save the plot as a png file
+		plt.savefig('random_forest_accuracy_vs_n_trees.png')
+		print("random_forest_accuracy_vs_n_trees.png is created successfully!")
+		plt.show()
+
+	if algorithm == "RF_d":
+		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
+		plt.plot(
+			# training ASE drew with red solid line
+			max_features, train_accs, 'r-',
+			max_features, test_accs, 'b-'
+		)
+		plt.legend(['train_accuracy', 'test_accuracy'])
+		plt.xlabel('Random forest max_features [1, 2, 5, 8, 10, 20, 25, 35, 50]')
+		plt.ylabel('accuracy %')
+	# save the plot as a png file
+		plt.savefig('random_forest_accuracy_vs_max_features.png')
+		print("random_forest_accuracy_vs_max_features.png is created successfully!")
+		plt.show()
 
 	return 0
 
 # this function is for drawing plot between tree depth and F1 test performance
-def tree_draw_plot_2(f1_train_accs, f1_test_accs):
-	depth_list = list(range(1, 26))
-	plt.plot(
-		# training ASE drew with red solid line
-		depth_list, f1_train_accs, 'r-',
-		depth_list, f1_test_accs, 'b-'
-	)
-	plt.legend(['f1_train_accuracy', 'f1_test_accuracy'])
-	plt.xlabel('decision tree depth value (1 ~ 25)')
-	plt.ylabel('accuracy %')
+def draw_plot_2(f1_train_accs, f1_test_accs, algorithm):
+	if algorithm =="DT":
+		depth_list = list(range(1, 26))
+		plt.plot(
+			# training ASE drew with red solid line
+			depth_list, f1_train_accs, 'r-',
+			depth_list, f1_test_accs, 'b-'
+		)
+		plt.legend(['f1_train_accuracy', 'f1_test_accuracy'])
+		plt.xlabel('decision tree depth value (1 ~ 25)')
+		plt.ylabel('accuracy %')
+		# save the plot as a png file
+		plt.savefig('f1_tree_accuracy_vs_tree_depth.png')
+		print("f1_tree_accuracy_vs_tree_depth.png is created successfully!")
+		plt.show()
+
+	if algorithm == "RF_b":
+		n_trees = list(range(10, 210, 10))
+		plt.plot(
+			# training ASE drew with red solid line
+			n_trees, f1_train_accs, 'r-',
+			n_trees, f1_test_accs, 'b-'
+		)
+		plt.legend(['f1_train_accuracy', 'f1_test_accuracy'])
+		plt.xlabel('Random forest n_trees (10, 20, 30 .. 200)')
+		plt.ylabel('accuracy %')
 	# save the plot as a png file
-	plt.savefig('f1_tree_accuracy_vs_tree_depth.png')
-	print("f1_tree_accuracy_vs_tree_depth.png is created successfully!")
-	plt.show()
+		plt.savefig('f1_random_forest_accuracy_vs_n_trees.png')
+		print("f1_random_forest_accuracy_vs_n_trees.png is created successfully!")
+		plt.show()
+
+	if algorithm == "RF_d":
+		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
+		plt.plot(
+			# training ASE drew with red solid line
+			max_features, f1_train_accs, 'r-',
+			max_features, f1_test_accs, 'b-'
+		)
+		plt.legend(['f1_train_accuracy', 'f1_test_accuracy'])
+		plt.xlabel('Random forest max_features [1, 2, 5, 8, 10, 20, 25, 35, 50]')
+		plt.ylabel('accuracy %')
+	# save the plot as a png file
+		plt.savefig('f1_random_forest_accuracy_vs_max_features.png')
+		print("f1_random_forest_accuracy_vs_max_features.png is created successfully!")
+		plt.show()
 
 	return 0
 

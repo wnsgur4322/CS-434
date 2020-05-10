@@ -48,7 +48,7 @@ class DecisionTreeClassifier():
 
 	# take in features X and labels y
 	# build a tree
-	def fit(self, X, y, feat_idx = None):
+	def fit(self, X, y, feat_idx):
 		self.num_classes = len(set(y))
 		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx)
 	
@@ -80,11 +80,13 @@ class DecisionTreeClassifier():
 	# function to build a decision tree
 	def build_tree(self, X, y, depth, feat_idx = None):
 		num_samples, num_features = X.shape
+
 		# which features we are considering for splitting on
 		if feat_idx == None:
-			self.features_idx = np.arange(0, X.shape[1])
+			features = np.arange(0, X.shape[1])
+			print("1")
 		else:
-			self.features_idx = feat_idx			
+			features = feat_idx			
 
 		# store data and information about best split
 		# used when building subtrees recursively
@@ -104,7 +106,8 @@ class DecisionTreeClassifier():
 		# if we haven't hit the maximum depth, keep building
 		if depth <= self.max_depth:
 			# consider each feature
-			for feature in self.features_idx:
+			print(features)
+			for feature in features:
 				# consider the set of all values for that feature to split on
 				possible_splits = np.unique(X[:, feature])
 				for split in possible_splits:
@@ -417,10 +420,11 @@ class AdaBoostClassifier():
 		alphas = []
 		feat_idx = []
 		feat_idx = random.sample(range(51), 51)
+		print(feat_idx)
 
 		for i in range(self.num_learner):
 			tree = DecisionTreeClassifier(max_depth = 1)
-			stump = tree.fit(X, y, feat_idx = feat_idx[i])
+			stump = tree.fit(X, y, feat_idx)
 			print(feat_idx)
 			stumps.append(stump)
 			print(stump)
