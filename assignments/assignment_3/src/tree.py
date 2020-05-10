@@ -438,6 +438,8 @@ class DecisionTreeAdaBoost():
 		self.num_classes = len(set(y))
 		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx, weights = weights)
 
+
+
 	# make prediction for each example of features X
 	def predict(self, X):
 		preds = [self._predict(example) for example in X]
@@ -655,12 +657,15 @@ class AdaBoostClassifier():
 		weights.append(np.ones(X.shape[0]) / X.shape[0])
 
 		for i in range(self.num_learner):
-			tree = DecisionTreeAdaBoost()
-			stump = tree.fit(X, y, weights = weights[i])
+			stump = DecisionTreeAdaBoost()
+			stump.fit(X, y, weights = weights[i])
+
+			print("done")
 			print("Stump: ", stump)
 			stumps.append(stump)
 			print("err")
 			predictions = stump.predict(X)
+			print(predictions)
 			print("err")
 			evaluations['predictions'] = predictions
 			evaluations['evaluation'] = np.where(evaluations['predictions'] == evaluations['target'], 1, 0)
