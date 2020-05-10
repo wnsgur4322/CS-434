@@ -73,7 +73,7 @@ def random_forest_testing(x_train, y_train, x_test, y_test, n_trees, max_feature
 	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
 
 def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner):
-	print('Ada Boost')
+	print('Ada Boost and L(', num_learner, ')')
 	aba = AdaBoostClassifier(num_learner)
 	aba.fit(x_train, y_train)
 	preds_train = aba.predict(x_train)
@@ -88,7 +88,7 @@ def ada_boost_testing(x_train, y_train, x_test, y_test, num_learner):
 	print('F1 Train {}'.format(f1(y_train, preds_train)))
 	print('F1 Test {}\n'.format(f1(y_test, preds)))
 
-   	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
+	return train_accuracy, test_accuracy, f1(y_train, preds_train), f1(y_test, preds)
 
 ###################################################
 # Modify for running your experiments accordingly #
@@ -148,12 +148,14 @@ if __name__ == '__main__':
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_b")
 
 		#Q2 - D part
+		# looping max_features
 		forest_train_accs = []
 		forest_test_accs = []
 		forest_f1_train_accs = []
 		forest_f1_test_accs = []
 
-		# looping max_features
+		#Q2 - B part
+		# looping n_trees
 		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
 		for i in max_features:
 			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 50, i)
@@ -162,16 +164,9 @@ if __name__ == '__main__':
 			forest_f1_train_accs.append(forest_f1_train_acc * 100)
 			forest_f1_test_accs.append(forest_f1_test_acc * 100)
 		
-		#Q2 - D plot
+		#Q2 - B plot
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
-
-		#Q2 - E part
-		# looping max_features
-		forest_train_accs = []
-		forest_test_accs = []
-		forest_f1_train_accs = []
-		forest_f1_test_accs = []
 
 		
 
@@ -182,7 +177,7 @@ if __name__ == '__main__':
 		adaboost_test_accs = []
 		adaboost_f1_train_accs = []
 		adaboost_f1_test_accs = []
-	
+		
 		zero_to_negone(y_train, y_test)
 
 		#Q3 - E
@@ -195,5 +190,11 @@ if __name__ == '__main__':
 		#Q3 - F
 		draw_plot_1(adaboost_train_accs, adaboost_test_accs, "ADA_f")
 		draw_plot_2(adaboost_f1_train_accs, adaboost_f1_test_accs, "ADA_f")
-	
 	print('Done')
+	
+	
+
+
+
+
+
