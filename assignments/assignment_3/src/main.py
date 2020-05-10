@@ -127,7 +127,7 @@ if __name__ == '__main__':
 		print("accuracy_result.txt created !\n")
 
 	# Part 2 - Random Forest
-	if args.random_forest == 1:
+	if args.random_forest == 0:
 		forest_train_accs = []
 		forest_test_accs = []
 		forest_f1_train_accs = []
@@ -171,7 +171,7 @@ if __name__ == '__main__':
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
-	if args.ada_boost == 0:
+	if args.ada_boost == 1:
 		zero_to_negone(y_train, y_test)
 		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 
