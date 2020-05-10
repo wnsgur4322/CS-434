@@ -384,25 +384,25 @@ class DecisionTreeAdaBoost():
 		# calculate gini impurity and gain
 
 		err = 0
-		l_product = [a*b for a,b in zip(left_y,left_w)]
-		r_product = [a*b for a,b in zip(right_y,right_w)]
-		t_product = [a*b for a,b in zip(y,w)]
+		l_product = left_y * left_w
+		r_product = right_y * right_w
+		t_product = y*w
 
 		if len(left_y) > 0 and len(right_y) > 0:
-			l_pos = sum(filter(lambda a: a>=0, l_product))
-			l_neg = abs(sum(filter(lambda a: a<0, l_product)))
+			l_pos = sum([a for a in l_product if a >= 0])
+			l_neg = abs(sum([a for a in l_product if a < 0]))
 			l_pos_p = l_pos / (l_pos+l_neg)
 			l_neg_p = l_neg / (l_pos+l_neg)
 
 
-			r_pos = sum(filter(lambda a: a>=0, r_product))
-			r_neg = abs(sum(filter(lambda a: a<0, r_product)))
+			r_pos = sum([a for a in r_product if a >= 0])
+			r_neg = abs(sum([a for a in r_product if a < 0]))
 			r_pos_p = r_pos / (r_pos+r_neg)
 			r_neg_p = r_neg / (r_pos+r_neg)
 
 			# For U(A) part
-			t_pos = sum(filter(lambda a: a>=0, t_product))
-			t_neg = abs(sum(filter(lambda a: a<0, t_product)))
+			t_pos = sum([a for a in t_product if a >= 0])
+			t_neg = abs(sum([a for a in t_product if a < 0]))
 			t_pos_p = t_pos / (t_pos+t_neg)
 			t_neg_p = t_neg / (t_pos+t_neg)
 

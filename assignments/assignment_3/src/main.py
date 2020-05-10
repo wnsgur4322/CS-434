@@ -153,7 +153,6 @@ if __name__ == '__main__':
 		forest_f1_train_accs = []
 		forest_f1_test_accs = []
 
-		#Q2 - B part
 		# looping n_trees
 		max_features = [1, 2, 5, 8, 10, 20, 25, 35, 50]
 		for i in max_features:
@@ -163,7 +162,7 @@ if __name__ == '__main__':
 			forest_f1_train_accs.append(forest_f1_train_acc * 100)
 			forest_f1_test_accs.append(forest_f1_test_acc * 100)
 		
-		#Q2 - B plot
+		#Q2 - D plot
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
 
@@ -173,13 +172,7 @@ if __name__ == '__main__':
 	# part 3 - A
 	if args.ada_boost == 1:
 		zero_to_negone(y_train, y_test)
+		print(y_train)
 		ada_boost_testing(x_train, y_train, x_test, y_test, 50)
 
 	print('Done')
-	
-	
-
-
-
-
-
