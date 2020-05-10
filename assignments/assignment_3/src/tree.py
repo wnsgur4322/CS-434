@@ -570,7 +570,8 @@ class DecisionTreeAdaBoost():
 		l_product = [a*b for a,b in zip(left_y,left_w)]
 		r_product = [a*b for a,b in zip(right_y,right_w)]
 		t_product = [a*b for a,b in zip(y,w)]
-		''''
+
+		'''
 		if len(left_y) > 0 and len(right_y) > 0:
 			# For U(AL) part
 			l_pos = 0.0
@@ -582,10 +583,8 @@ class DecisionTreeAdaBoost():
 					l_neg += left_w[i]
 		'''	
 		if len(left_y) > 0 and len(right_y) > 0:
-			print("Ltest", l_product, left_y, left_w)
-			l_pos = (l_product > 0).sum()
-			
-			l_neg = np.sum(l_product < 0)
+			l_pos = sum(filter(lambda a: a>=0, l_product))
+			l_neg = sum(filter(lambda a: a<0, l_product))
 			l_pos_p = l_pos / (l_pos+l_neg)
 			l_neg_p = l_neg / (l_pos+l_neg)
 
@@ -600,8 +599,8 @@ class DecisionTreeAdaBoost():
 				else:
 					r_neg += right_w[i]
 			'''
-			r_pos = np.sum(r_product >= 0)
-			r_neg = np.sum(r_product < 0)
+			r_pos = sum(filter(lambda a: a>=0, r_product))
+			r_neg = sum(filter(lambda a: a<0, r_product))
 			r_pos_p = r_pos / (r_pos+r_neg)
 			r_neg_p = r_neg / (r_pos+r_neg)
 
@@ -615,8 +614,8 @@ class DecisionTreeAdaBoost():
 				else:
 					t_neg += w[i]
 			'''
-			t_pos = np.sum(t_product >= 0)
-			t_neg = np.sum(t_product < 0)
+			t_pos = sum(filter(lambda a: a>=0, t_product))
+			t_neg = sum(filter(lambda a: a<0, t_product))
 			t_pos_p = t_pos / (t_pos+t_neg)
 			t_neg_p = t_neg / (t_pos+t_neg)
 
@@ -651,11 +650,13 @@ class AdaBoostClassifier():
 		evaluations = pd.DataFrame(y.copy())
 		# set all weights as 1/n (initial weights)
 		evaluations['weights'] = 1/len(y)
+		weights = []
 		alphas = []
+		weights.append(np.ones(X.shape[0]) / X.shape[0])
 
 		for i in range(self.num_learner):
 			tree = DecisionTreeAdaBoost()
-			stump = tree.fit(X, y)
+			stump = tree.fit(X, y, weights = weights[i])
 			print("Stump: ", stump)
 			stumps.append(stump)
 			print("err")
