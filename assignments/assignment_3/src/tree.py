@@ -584,7 +584,7 @@ class DecisionTreeAdaBoost():
 		'''	
 		if len(left_y) > 0 and len(right_y) > 0:
 			l_pos = sum(filter(lambda a: a>=0, l_product))
-			l_neg = sum(filter(lambda a: a<0, l_product))
+			l_neg = abs(sum(filter(lambda a: a<0, l_product)))
 			l_pos_p = l_pos / (l_pos+l_neg)
 			l_neg_p = l_neg / (l_pos+l_neg)
 
@@ -600,7 +600,7 @@ class DecisionTreeAdaBoost():
 					r_neg += right_w[i]
 			'''
 			r_pos = sum(filter(lambda a: a>=0, r_product))
-			r_neg = sum(filter(lambda a: a<0, r_product))
+			r_neg = abs(sum(filter(lambda a: a<0, r_product)))
 			r_pos_p = r_pos / (r_pos+r_neg)
 			r_neg_p = r_neg / (r_pos+r_neg)
 
@@ -615,7 +615,7 @@ class DecisionTreeAdaBoost():
 					t_neg += w[i]
 			'''
 			t_pos = sum(filter(lambda a: a>=0, t_product))
-			t_neg = sum(filter(lambda a: a<0, t_product))
+			t_neg = abs(sum(filter(lambda a: a<0, t_product)))
 			t_pos_p = t_pos / (t_pos+t_neg)
 			t_neg_p = t_neg / (t_pos+t_neg)
 
