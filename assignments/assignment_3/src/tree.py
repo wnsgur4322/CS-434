@@ -263,7 +263,7 @@ class DecisionTreeAdaBoost():
 	# take in features X and labels y
 	# build a tree
 	def fit(self, X, y, feat_idx = None, weights = None):
-		self.num_classes = len(set(y))
+		self.num_classes = list(set(y))
 		self.root = self.build_tree(X, y, depth=1, feat_idx = feat_idx, weights = weights)
 
 
@@ -325,8 +325,12 @@ class DecisionTreeAdaBoost():
 
 		# what we would predict at this node if we had to
 		# majority class
-		num_samples_per_class = [np.sum(y == i) for i in range(self.num_classes)]
+		'''
+		num_samples_per_class = [np.sum(y == i) for i in range(-1, self.num_classes, 2)]
 		prediction = np.argmax(num_samples_per_class)
+		'''
+		num_samples_per_class = [np.sum(y == i) for i in self.num_classes]
+		prediction = self.num_classes[np.argmax(num_samples_per_class)]
 
 		# if we haven't hit the maximum depth, keep building
 		if depth <= self.max_depth:
@@ -374,6 +378,7 @@ class DecisionTreeAdaBoost():
 		err = self.calculate_weighted_err(y, left_y, right_y, left_w, right_w, weights)
 		return err, left_X, right_X, left_y, right_y, left_w, right_w
 
+	
 	def calculate_weighted_err(self, y, left_y, right_y, left_w, right_w, w):
 		# not a leaf node
 		# calculate gini impurity and gain
@@ -416,32 +421,29 @@ class DecisionTreeAdaBoost():
 		# don't have any gain, and don't want to divide by 0
 		else:
 			return 0
-
-
+			
 class AdaBoostClassifier():
 	def __init__(self, num_learner):
 		self.num_learner = num_learner
 		self.alphas = None
 		self.stumps = None
 
+	
 	def fit(self, X, y):
 		stumps = []
 
 		#initialize weights
-		#evaluations = pd.DataFrame(y.copy())
 		# set all weights as 1/n (initial weights)
-		#evaluations['weights'] = 1/len(y)
 		weights = []
 		alphas = []
-		weights.append(np.ones(X.shape[0]) / X.shape[0])
+		weights = (np.ones(X.shape[0]) / X.shape[0])
 
-		for i in range(self.num_learner):
+		for i in range(0, self.num_learner):
 			stump = DecisionTreeAdaBoost()
-			stump.fit(X, y, weights = weights[i])
-
+			stump.fit(X, y, weights = weights)
 			stumps.append(stump)
 			prediction = stump.predict(X)
-
+			
 			classified = np.where(prediction == y, 1, 0)
 			missclassified = np.where(prediction != y, 1, 0)
 
@@ -451,40 +453,22 @@ class AdaBoostClassifier():
 			err = np.sum(weights*missclassified)/np.sum(weights)
 
 			alpha = (1/2)*np.log((1-err)/err)
-			print("ALPHA: ", alpha)
+			print("ALPHA: ", alpha, err)
 			alphas.append(alpha)
-			print(weights)
 			weights *= np.exp(alpha*missclassified)
-			
-			print(weights)
-			'''
-			print("acc", accuracy)
-			exit(1)
-			evaluations['predictions'] = prediction
-			evaluation = np.where(predictions == y, 1, 0)
-			evaluations['misclassified'] = np.where(evaluations['predictions'] != evaluations['target'],1,0)
+			sum_weights = sum(weights)
+			print(weights/sum_weights)
+			weights = weights/sum_weights
 
-			accuracy = sum(evaluations['evaluation'])/len(evaluations['evaluation'])
-			miss = sum(evaluations['misclassified'])/len(evaluations['misclassified'])
-
-			err = np.sum(evaluations['weights']*evaluations['misclassified'])/np.sum(evaluations['weights'])
-
-
-			alpha = (1/2)*np.log((1-err)/err)
-			print("ALPHA: ", alpha)
-			alphas.append(alpha)
-
-
-			evaluations['weights'] *= np.exp(alpha*evaluations['misclassified'])
-			'''
 		self.alphas = alphas
 		self.stumps = stumps
 
 	def predict(self, X):
 		preds = []
 		predictions = []
-		for alpha, stump in zip(self.alphas, self.stumps):
-			pred = alpha*stump.predict(X)
+		print(len(self.alphas), len(self.stumps))
+		for i in range(len(self.stumps)):
+			pred = np.asarray(self.stumps[i].predict(X)) * self.alphas[i]
 			preds.append(pred)
-			predictions.append(np.sign(np.sum(np.array(predictions),axis=0)))
+		predictions = np.sign(np.sum(np.array(preds), axis=0))
 		return predictions
