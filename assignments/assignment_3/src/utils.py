@@ -90,6 +90,21 @@ def draw_plot_1(train_accs, test_accs, algorithm):
 		print("random_forest_accuracy_vs_max_features.png is created successfully!")
 		plt.show()
 
+	if algorithm == "ADA_f":
+		n_trees = list(range(10, 210, 10))
+		plt.plot(
+			# training ASE drew with red solid line
+			n_trees, train_accs, 'r-',
+			n_trees, test_accs, 'b-'
+		)
+		plt.legend(['train_accuracy', 'test_accuracy'])
+		plt.xlabel('Adaboost L (10, 20, 30 .. 200)')
+		plt.ylabel('accuracy %')
+	# save the plot as a png file
+		plt.savefig('adaboost_accuracy_vs_L.png')
+		print("adaboost_accuracy_vs_L.png is created successfully!")
+		plt.show()
+
 	return 0
 
 # this function is for drawing plot between tree depth and F1 test performance
@@ -139,6 +154,21 @@ def draw_plot_2(f1_train_accs, f1_test_accs, algorithm):
 		print("f1_random_forest_accuracy_vs_max_features.png is created successfully!")
 		plt.show()
 
+
+	if algorithm == "ADA_f":
+		n_trees = list(range(10, 210, 10))
+		plt.plot(
+			# training ASE drew with red solid line
+			n_trees, f1_train_accs, 'r-',
+			n_trees, f1_test_accs, 'b-'
+		)
+		plt.legend(['f1_train_accuracy', 'f1_test_accuracy'])
+		plt.xlabel('Adaboost L (10, 20, 30 .. 200)')
+		plt.ylabel('accuracy %')
+	# save the plot as a png file
+		plt.savefig('f1_adaboost_accuracy_vs_L.png')
+		print("f1_adaboost_accuracy_vs_L.png is created successfully!")
+		plt.show()
 	return 0
 
 
