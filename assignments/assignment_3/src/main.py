@@ -130,6 +130,7 @@ if __name__ == '__main__':
 
 	# Part 2 - Random Forest
 	if args.random_forest == 1:
+		
 		forest_train_accs = []
 		forest_test_accs = []
 		forest_f1_train_accs = []
@@ -169,10 +170,16 @@ if __name__ == '__main__':
 		#Q2 - D plot
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
-
 		
+
 		#Q2 - F chart
-		for i in range(10):
+
+		forest_train_accs = []
+		forest_test_accs = []
+		forest_f1_train_accs = []
+		forest_f1_test_accs = []
+
+		for i in range(2):
 			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 152, 25)
 			forest_train_accs.append(forest_train_acc * 100)
 			forest_test_accs.append(forest_test_acc * 100)
@@ -196,7 +203,7 @@ if __name__ == '__main__':
 		print(mean(forest_f1_train_accs))
 		print("mean of best f1 test accuracy")
 		print(mean(forest_f1_test_accs))
-
+		print("\n")
 
 
 		
