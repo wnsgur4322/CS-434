@@ -100,7 +100,7 @@ if __name__ == '__main__':
 		county_info(args)
 	
 	#decision tree
-	if args.decision_tree == 0:
+	if args.decision_tree == 1:
 		train_accs = []
 		test_accs = []
 		f1_train_accs = []
@@ -143,6 +143,7 @@ if __name__ == '__main__':
 			forest_f1_train_accs.append(forest_f1_train_acc * 100)
 			forest_f1_test_accs.append(forest_f1_test_acc * 100)
 		
+		print("check:", forest_test_accs)
 		#Q2 - B plot
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_b")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_b")
@@ -171,7 +172,7 @@ if __name__ == '__main__':
 
 	# Part 3 - Ada Boosting
 	# part 3 - A
-	if args.ada_boost == 0:
+	if args.ada_boost == 1:
 		adaboost_train_accs = []
 		adaboost_test_accs = []
 		adaboost_f1_train_accs = []
