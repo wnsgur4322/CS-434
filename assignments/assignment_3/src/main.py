@@ -101,7 +101,7 @@ if __name__ == '__main__':
 		county_info(args)
 	
 	#decision tree
-	if args.decision_tree == 0:
+	if args.decision_tree == 1:
 		train_accs = []
 		test_accs = []
 		f1_train_accs = []
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 		forest_f1_train_accs = []
 		forest_f1_test_accs = []
 
-		"""
+		
 		#Q2 - B part
 		# looping n_trees
 		for i in range(10, 210, 10):
@@ -170,9 +170,9 @@ if __name__ == '__main__':
 		draw_plot_1(forest_train_accs, forest_test_accs, "RF_d")
 		draw_plot_2(forest_f1_train_accs, forest_f1_test_accs, "RF_d")
 
-		"""
+		
 		#Q2 - F chart
-		for i in range(2):
+		for i in range(10):
 			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 152, 25)
 			forest_train_accs.append(forest_train_acc * 100)
 			forest_test_accs.append(forest_test_acc * 100)
