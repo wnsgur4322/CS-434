@@ -3,6 +3,7 @@
 # Team members
 # Junhyeok Jeong, jeongju@oregonstate.edu
 # Youngjoo Lee, leey3@oregonstate.edu
+# Haewon Cho, choha@oregonstate.edu
 
 import numpy as np
 import pandas as pd
