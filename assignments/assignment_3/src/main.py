@@ -179,7 +179,7 @@ if __name__ == '__main__':
 		forest_f1_train_accs = []
 		forest_f1_test_accs = []
 
-		for i in range(2):
+		for i in range(10):
 			forest_train_acc, forest_test_acc, forest_f1_train_acc, forest_f1_test_acc = random_forest_testing(x_train, y_train, x_test, y_test, 152, 25)
 			forest_train_accs.append(forest_train_acc * 100)
 			forest_test_accs.append(forest_test_acc * 100)
