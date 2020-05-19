@@ -17,8 +17,9 @@ def load_data(rootdir='./'):
     print('load data \n')
     x_train = np.loadtxt(rootdir + 'x_train.txt', dtype=str).astype(float)
     y_train = np.loadtxt(rootdir + 'y_train.txt', dtype=str).astype(int)
-    x_test = np.loadtxt(rootdir + 'x_test.txt', dtype=str).astype(float)
-    y_test = np.loadtxt(rootdir + 'y_test.txt', dtype=str).astype(int)
+    # change train to test.txt later when it is updated !!
+    x_test = np.loadtxt(rootdir + 'x_train.txt', dtype=str).astype(float)
+    y_test = np.loadtxt(rootdir + 'y_train.txt', dtype=str).astype(int)
 
     print('x_train: [%d, %d], y_train:[%d,], x_test: [%d, %d], y_test:[%d]' % (
         x_train.shape[0], x_train.shape[1], y_train.shape[0], x_test.shape[0],

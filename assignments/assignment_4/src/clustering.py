@@ -35,6 +35,13 @@ class KMeans():
         ################################
         #      YOUR CODE GOES HERE     #
         ################################
+        # calculate centeroid (slide p.39) 1/n * (∑ x)
+        # 1/n * ∑ x
+        self.centers[len(self.centers) - 1] = x.sum(axis=0) / len(x)
+        
+        print(len(self.centers[len(self.centers) - 1]), self.centers[len(self.centers) - 1])
+        return self.centers    
+        
 
     def revise_centers(self, x, labels):
         """
