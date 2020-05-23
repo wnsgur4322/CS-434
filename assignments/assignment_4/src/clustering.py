@@ -6,7 +6,7 @@
 # Haewon Cho, choha@oregonstate.edu
 
 import numpy as np
-
+import random
 
 class KMeans():
     """
@@ -32,14 +32,31 @@ class KMeans():
 
         self.centers = np.zeros((self.k, x.shape[1]))
 
+
         ################################
         #      YOUR CODE GOES HERE     #
         ################################
         # calculate centeroid (slide p.39) 1/n * (∑ x)
         # 1/n * ∑ x
+        print(x.shape, self.k, self.centers.shape)
+        
+        exit(1)
+
+        for i in range(0, len(self.centers)):
+            random_list = random.choice(x)
+            self.centers[i] = random_list
+        
+        print(len(self.centers), self.centers)
+
+        print("\n\ntest\n\n")
+
+
+        ###########################################################
         self.centers[len(self.centers) - 1] = x.sum(axis=0) / len(x)
         
         print(len(self.centers[len(self.centers) - 1]), self.centers[len(self.centers) - 1])
+        
+        exit(1)
         return self.centers    
         
 
