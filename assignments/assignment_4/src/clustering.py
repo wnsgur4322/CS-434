@@ -72,11 +72,16 @@ class KMeans():
         #      YOUR CODE GOES HERE       #
         ##################################
 
-        #for i in range(self.k):
-            
+        comp_distance = np.zeros((x.shape[0], self.k))
+        for i in range(self.k):
+            distance = 0
+            distance = x - self.centers[i]
+            distance = np.square(distance)
+            distance = np.sum(distance, axis = 1)
+            comp_distance[:,i] = distance
 
-
-
+        labels = np.argmin(comp_distance, axis=1)
+       
         return labels
 
     def get_sse(self, x, labels):

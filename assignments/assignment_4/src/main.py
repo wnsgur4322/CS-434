@@ -128,7 +128,7 @@ if __name__ == '__main__':
         x_test = pca.transform(x_test)
         visualize(x_train, y_train)
 
-    if args.kmeans == 0:
+    if args.kmeans == 1:
         apply_kmeans(args.pca, x_train, y_train, x_test, y_test, args.kmeans_max_iter, args.kmeans_max_k)
 
     print('Done')
