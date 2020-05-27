@@ -110,10 +110,10 @@ class KMeans():
         '''
         
         ## ver 1
+
         for i in range(self.k):
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
-            sse = sum(sum(sum([(x[wherei, :] - self.centers[i, :])**2])))
-        
+            sse += sum(sum(list((x[wherei, :] - self.centers[i, :])**2)))
         ## ver 2
         '''
         for i in range(self.k):
@@ -122,6 +122,7 @@ class KMeans():
             for x_data in x:
                 sse = sum(sum([(x_data[i] - self.centers[i])**2]))
         '''
+
         print("sse: ", sse)
         #exit(1)
         
