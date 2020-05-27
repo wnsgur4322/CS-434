@@ -108,24 +108,20 @@ class KMeans():
                 if min(sse_list) == sse_list[i]:
                     sse = sse_list[i]                
         '''
-        '''
+        
+        ## ver 1
         for i in range(self.k):
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
-            print("wherei: ", wherei, self.centers.shape)
-            for x_data in x:
-                print(self.centers[i, :].shape, x[wherei, :].shape)
-                #exit(1)
-                sse = sum(sum([(x_data[wherei, :] - self.centers[i, :])**2]))
+            sse = sum(sum(sum([(x[wherei, :] - self.centers[i, :])**2])))
+        
+        ## ver 2
         '''
         for i in range(self.k):
             #wherei = np.squeeze(np.argwhere(labels == i), axis=1)
             #print("wherei: ", wherei, self.centers.shape)
             for x_data in x:
-                #print(self.centers[i, :].shape, x[wherei, :].shape)
-                #exit(1)
-                #print(x_data[i].shape, x_data[i], self.centers[i], self.centers[i].shape)
-                #exit(1)
                 sse = sum(sum([(x_data[i] - self.centers[i])**2]))
+        '''
         print("sse: ", sse)
         #exit(1)
         
