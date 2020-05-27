@@ -38,10 +38,7 @@ class KMeans():
         ################################
         # calculate centeroid (slide p.39) 1/n * (∑ x)
         # 1/n * ∑ x
-        print(x.shape, self.k, self.centers.shape)
-        
-        exit(1)
-
+        """
         for i in range(0, len(self.centers)):
             random_list = random.choice(x)
             self.centers[i] = random_list
@@ -56,8 +53,18 @@ class KMeans():
         
         print(len(self.centers[len(self.centers) - 1]), self.centers[len(self.centers) - 1])
         
-        exit(1)
+        
         return self.centers    
+        """
+        
+        for i in range(self.centers.shape[1]):
+            random_list = random.sample(list(x[:,i]), self.k)
+            for j in range(self.k):
+                self.centers[j][i] = random_list[j]
+            
+        
+        
+        
         
 
     def revise_centers(self, x, labels):
