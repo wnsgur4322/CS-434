@@ -103,7 +103,30 @@ class KMeans():
         #      YOUR CODE GOES HERE       #
         ##################################
 
+
         sse = 0.
+
+        '''
+        for x_data in x:
+            sse_list = []
+            for center in self.centers:
+                sse_list.append(sqrt(sum([x_data[i] - center[i]])**2 for i in range(len(center))))
+            for i in range(len(self.centers)):
+                if min(sse_list) == sse_list[i]:
+                    sse = sse_list[i]                
+        '''
+
+        temp_sse = sum(sum([x_data[i] - self.centers[i]])**2 for i in range(len(self.centers)) for x_data in x)
+        print(temp_sse)
+
+        print("min sse: ", min(temp_sse))
+
+        #exit(1)
+        for i in range(len(temp_sse)):
+            if min(temp_sse) == temp_sse[i]:
+                sse = temp_sse[i]
+
+        print(sse)
         return sse
 
     def get_purity(self, x, y):
