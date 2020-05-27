@@ -24,7 +24,7 @@ from clustering import KMeans
 
 def load_args():
     parser = argparse.ArgumentParser(description='arguments')
-    parser.add_argument('--pca', default=0, type=int,
+    parser.add_argument('--pca', default=1, type=int,
                         help='set to 1 if we desire running pca, otherwise 0')
     parser.add_argument('--kmeans', default=1, type=int,
                         help='set to 1 if we desire running kmeans, otherwise 0')
@@ -128,7 +128,7 @@ if __name__ == '__main__':
         x_test = pca.transform(x_test)
         visualize(x_train, y_train)
 
-    if args.kmeans == 1:
+    if args.kmeans == 0:
         apply_kmeans(args.pca, x_train, y_train, x_test, y_test, args.kmeans_max_iter, args.kmeans_max_k)
 
     print('Done')

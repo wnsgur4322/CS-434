@@ -69,10 +69,20 @@ class PCA():
         self.eig_vals = None
         self.eig_vecs = None
 
+        # 1. Compute the center of the data
         x = x - PCA.mean(x)
         ########################################
         #       YOUR CODE GOES HERE            #
         ########################################
+        # 2. Compute the Covariance matrix
+        x = PCA.cov(x)
+        print(x.shape)
+        print(x)
+
+        # 3. Compute the eigen-vectors and eigen-values of Σ
+        self.eig_vals, self.eig_vecs = PCA.eig(x)
+
+        return self.eig_vals, self.eig_vecs
 
 
     def transform(self, x):

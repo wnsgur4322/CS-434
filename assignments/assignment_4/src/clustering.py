@@ -72,7 +72,7 @@ class KMeans():
         #      YOUR CODE GOES HERE       #
         ##################################
 
-        for i in range(self.k):
+        #for i in range(self.k):
             
 
 
