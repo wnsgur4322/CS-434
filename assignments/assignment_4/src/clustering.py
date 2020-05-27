@@ -36,34 +36,14 @@ class KMeans():
         ################################
         #      YOUR CODE GOES HERE     #
         ################################
-        # calculate centeroid (slide p.39) 1/n * (∑ x)
-        # 1/n * ∑ x
-        """
-        for i in range(0, len(self.centers)):
-            random_list = random.choice(x)
-            self.centers[i] = random_list
         
-        print(len(self.centers), self.centers)
 
-        print("\n\ntest\n\n")
-
-
-        ###########################################################
-        self.centers[len(self.centers) - 1] = x.sum(axis=0) / len(x)
-        
-        print(len(self.centers[len(self.centers) - 1]), self.centers[len(self.centers) - 1])
-        
-        
-        return self.centers    
-        """
-        
-        for i in range(self.centers.shape[1]):
-            random_list = random.sample(list(x[:,i]), self.k)
-            for j in range(self.k):
-                self.centers[j][i] = random_list[j]
+        random_list = random.sample(range(x.shape[0]), self.k)
+        for i in range(self.k):
+            self.centers[i,:] = x[random_list[i]]
             
-        
-        
+            
+            
         
         
 
@@ -79,6 +59,8 @@ class KMeans():
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
             self.centers[i, :] = x[wherei, :].mean(0)
 
+
+
     def predict(self, x):
         """
         returns the labels of the input x based on the current self.centers
@@ -89,6 +71,12 @@ class KMeans():
         ##################################
         #      YOUR CODE GOES HERE       #
         ##################################
+
+        for i in range(self.k):
+            
+
+
+
         return labels
 
     def get_sse(self, x, labels):
@@ -105,7 +93,7 @@ class KMeans():
 
 
         sse = 0.
-
+        
         '''
         for x_data in x:
             sse_list = []
@@ -127,6 +115,7 @@ class KMeans():
                 sse = temp_sse[i]
 
         print(sse)
+        
         return sse
 
     def get_purity(self, x, y):
