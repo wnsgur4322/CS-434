@@ -89,6 +89,30 @@ def visualize(x_train, y_train):
     #      YOUR CODE GOES HERE       #
     ##################################
 
+    pc1 = x_train.dot(x_train[0])
+    pc2 = x_train.dot(x_train[1])
+    
+    fig = plt.figure(figsize=(8, 8))
+    ax = fig.add_subplot(1,1,1)
+    ax.set_xlabel('Principal Component 1', fontsize = 15)
+    ax.set_ylabel('Principal Component 2', fontsize = 15)
+    ax.set_title('2 component PCA', fontsize = 20)
+
+    train_unique = list(set(y_train))
+    train_colors = ["r","b","g", "y", "m", "w"]
+    
+    for i, spec in enumerate(y_train):
+        print(i)
+        plt.scatter(pc1[i], pc2[i], label = spec, s = 20, c=train_colors[train_unique.index(spec)])
+        ax.annotate(str(i+1), (pc1[i],pc2[i]))
+    
+    from collections import OrderedDict
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys(), prop={'size': 15}, loc=4)
+    
+    
+    plt.show()
 
 def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmeans_max_k):
     print('kmeans\n')
