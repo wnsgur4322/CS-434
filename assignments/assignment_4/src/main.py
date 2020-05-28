@@ -89,9 +89,17 @@ def visualize(x_train, y_train):
     #      YOUR CODE GOES HERE       #
     ##################################
 
+    #ver 1
+    '''
     pc1 = x_train.dot(x_train[0])
     pc2 = x_train.dot(x_train[1])
-    
+    '''
+
+    #ver 2
+    x_trans = x_train.transpose()
+    pc1 = x_trans[0]
+    pc2 = x_trans[1]
+
     fig = plt.figure(figsize=(8, 8))
     ax = fig.add_subplot(1,1,1)
     ax.set_xlabel('Principal Component 1', fontsize = 15)
@@ -104,7 +112,7 @@ def visualize(x_train, y_train):
     for i, spec in enumerate(y_train):
         print(i)
         plt.scatter(pc1[i], pc2[i], label = spec, s = 20, c=train_colors[train_unique.index(spec)])
-        ax.annotate(str(i+1), (pc1[i],pc2[i]))
+        #ax.annotate(str(i+1), (pc1[i],pc2[i]))
     
     from collections import OrderedDict
     handles, labels = plt.gca().get_legend_handles_labels()
