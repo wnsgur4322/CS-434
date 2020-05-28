@@ -82,8 +82,6 @@ class PCA():
         # 3. Compute the eigen-vectors and eigen-values of Σ
         self.eig_vals, self.eig_vecs = PCA.eig(x)
 
-        return self.eig_vals, self.eig_vecs
-
 
     def transform(self, x):
         """
