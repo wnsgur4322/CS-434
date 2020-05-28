@@ -98,34 +98,17 @@ class KMeans():
 
 
         sse = 0.
-        
-        '''
-        for x_data in x:
-            sse_list = []
-            for center in self.centers:
-                sse_list.append(sqrt(sum([x_data[i] - center[i]])**2 for i in range(len(center))))
-            for i in range(len(self.centers)):
-                if min(sse_list) == sse_list[i]:
-                    sse = sse_list[i]                
-        '''
-        
-        ## ver 1
+
         for i in range(self.k):
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
-            sse = sum(sum(sum([(x[wherei, :] - self.centers[i, :])**2])))
-        
-        ## ver 2
-        '''
-        for i in range(self.k):
-            #wherei = np.squeeze(np.argwhere(labels == i), axis=1)
-            #print("wherei: ", wherei, self.centers.shape)
-            for x_data in x:
-                sse = sum(sum([(x_data[i] - self.centers[i])**2]))
-        '''
+            sse += sum(sum(list((x[wherei, :] - self.centers[i, :])**2)))
+
+
         print("sse: ", sse)
-        #exit(1)
+
         
         return sse
+
 
     def get_purity(self, x, y):
         """
