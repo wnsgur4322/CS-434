@@ -110,10 +110,10 @@ class KMeans():
         '''
         
         ## ver 1
-
         for i in range(self.k):
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
-            sse += sum(sum(list((x[wherei, :] - self.centers[i, :])**2)))
+            sse = sum(sum(sum([(x[wherei, :] - self.centers[i, :])**2])))
+        
         ## ver 2
         '''
         for i in range(self.k):
@@ -122,7 +122,6 @@ class KMeans():
             for x_data in x:
                 sse = sum(sum([(x_data[i] - self.centers[i])**2]))
         '''
-
         print("sse: ", sse)
         #exit(1)
         
@@ -140,6 +139,20 @@ class KMeans():
         ##################################
         #      YOUR CODE GOES HERE       #
         ##################################
+        ground_truth = 0
+        for i in range(self.k):
+            b = [x==i for x in labels]
+            print(b)
+            res = np.array(range(len(b)))
+            print(i)
+            k_predict = res[b]
+            y_preds = y[k_predict]
+            y_list = y_preds.tolist()
+            max_class = max(set(y_list), key=y_list.count)
+            ground_truth += y_list.count(max_class)
+
+        purity = ground_truth / y.shape[0]
+
         return purity
 
     def fit(self, x):

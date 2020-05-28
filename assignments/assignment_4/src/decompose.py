@@ -95,6 +95,8 @@ class PCA():
         if isinstance(x, np.ndarray):
             x = np.asarray(x)
         if self.eig_vecs is not None:
+            print("not none")
             return np.matmul(x, self.eig_vecs)
         else:
+            print("else !!")
             return x
