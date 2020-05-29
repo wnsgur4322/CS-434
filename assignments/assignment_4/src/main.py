@@ -30,7 +30,7 @@ def load_args():
                         help='set to 1 if we desire running kmeans, otherwise 0')
 
     parser.add_argument('--pca_retain_ratio', default=.9, type=float)
-    parser.add_argument('--kmeans_max_k', default=15, type=int)
+    parser.add_argument('--kmeans_max_k', default=10, type=int)
     parser.add_argument('--kmeans_max_iter', default=20, type=int)
     parser.add_argument('--root_dir', default='../data/', type=str)
     args = parser.parse_args()
