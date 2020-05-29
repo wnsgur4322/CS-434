@@ -82,7 +82,6 @@ class PCA():
         # 3. Compute the eigen-vectors and eigen-values of Σ
         self.eig_vals, self.eig_vecs = PCA.eig(x)
 
-
     def transform(self, x):
         """
         projects x into lower dimension based on current eig_vals and eig_vecs
