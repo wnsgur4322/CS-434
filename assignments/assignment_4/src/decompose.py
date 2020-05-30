@@ -80,8 +80,10 @@ class PCA():
         # 3. Compute the eigen-vectors and eigen-values of Σ
         self.eig_vals, self.eig_vecs = PCA.eig(x)
 
-        self.eig_vals.argsort()[::-1]
+        sort_idx = np.argsort(self.eig_vals)
 
+        self.eig_vals = self.eig_vals[sort_idx[::-1]]
+        self.eig_vecs = self.eig_vecs[:, sort_idx[::-1]]
 
         target = sum(self.eig_vals) * self.retain_ratio
 
