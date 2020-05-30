@@ -29,7 +29,7 @@ def load_args():
     parser.add_argument('--kmeans', default=1, type=int,
                         help='set to 1 if we desire running kmeans, otherwise 0')
 
-    parser.add_argument('--pca_retain_ratio', default=.9, type=float)
+    parser.add_argument('--pca_retain_ratio', default=0.8, type=float)
     parser.add_argument('--kmeans_max_k', default=10, type=int)
     parser.add_argument('--kmeans_max_iter', default=20, type=int)
     parser.add_argument('--root_dir', default='../data/', type=str)
@@ -153,7 +153,8 @@ def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmea
                 
                 train_purities_vs_k[k-1] += kmeans.get_purity(x_train, y_train)
                 train_purities_vs_k[k-1] = train_purities_vs_k[k-1] / repeat
-                
+                print("Purity: ", train_purities_vs_k[k-1])
+
                 train_sses_vs_k[k-1] += min(sse_vs_iter)
                 train_sses_vs_k[k-1] = train_sses_vs_k[k-1]/repeat
 
@@ -180,6 +181,8 @@ if __name__ == '__main__':
     args = load_args()
     x_train, y_train, x_test, y_test = load_data(args.root_dir)
 
+    print("X_train shape before: ", x_train.shape)
+
     if args.pca == 1:
         pca = PCA(args.pca_retain_ratio)
         pca.fit(x_train)
@@ -188,6 +191,8 @@ if __name__ == '__main__':
         visualize(x_train, y_train)
 
     if args.kmeans == 1:
+        print("X_train shape After: ", x_train.shape)
+        #exit(1)
         apply_kmeans(args.pca, x_train, y_train, x_test, y_test, args.kmeans_max_iter, args.kmeans_max_k)
 
     print('Done')
