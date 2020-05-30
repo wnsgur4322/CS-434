@@ -30,7 +30,7 @@ def load_args():
                         help='set to 1 if we desire running kmeans, otherwise 0')
 
     parser.add_argument('--pca_retain_ratio', default=0.8, type=float)
-    parser.add_argument('--kmeans_max_k', default=10, type=int)
+    parser.add_argument('--kmeans_max_k', default=11, type=int)
     parser.add_argument('--kmeans_max_iter', default=20, type=int)
     parser.add_argument('--root_dir', default='../data/', type=str)
     args = parser.parse_args()
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
     print("X_train shape before: ", x_train.shape)
 
-    if args.pca == 1:
+    if args.pca == 0:
         pca = PCA(args.pca_retain_ratio)
         pca.fit(x_train)
         x_train = pca.transform(x_train)
