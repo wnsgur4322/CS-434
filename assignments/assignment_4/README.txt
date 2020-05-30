@@ -26,4 +26,15 @@ pandas version: 1.0.3 (or other version)
 matplotlib version: 3.2.1 (or other version)
 seaobrn version: 0.10.1 (or other version)
 
-3.
+3. How to compile k-means with PCA
+
+python3 main.py --pca 1 --kmeans 1
+
+4. How to compile k-means without PCA
+
+python3 main.py --pca 0 --kmeans 1
+
+5. How to change PCA retain ratio
+
+python3 main.py --pca 1 --kmeans 1 --pca_retain_ratio (your rate)
+
