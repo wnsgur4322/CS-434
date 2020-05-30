@@ -76,11 +76,28 @@ class PCA():
         ########################################
         # 2. Compute the Covariance matrix
         x = PCA.cov(x)
-        print(x.shape)
-        print(x)
 
         # 3. Compute the eigen-vectors and eigen-values of Σ
         self.eig_vals, self.eig_vecs = PCA.eig(x)
+
+        self.eig_vals.argsort()[::-1]
+
+
+        target = sum(self.eig_vals) * self.retain_ratio
+
+        index = 0
+        s = 0
+        for i in range(len(self.eig_vals)):
+            s = s + self.eig_vals[i]
+            if s >= target:
+                index = i
+                break
+               
+        print("Index: ", i)
+        self.eig_vals = self.eig_vals[:index]
+        self.eig_vecs = self.eig_vecs[:, :index]
+
+
 
     def transform(self, x):
         """
