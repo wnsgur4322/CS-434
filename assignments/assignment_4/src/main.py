@@ -115,7 +115,6 @@ def visualize(x_train, y_train):
     train_colors = ["r","b","g", "y", "m", "w"]
     
     for i, spec in enumerate(y_train):
-        print(i)
         plt.scatter(pc1[i], pc2[i], label = spec, s = 20, c=train_colors[train_unique.index(spec)])
         #ax.annotate(str(i+1), (pc1[i],pc2[i]))
     
@@ -137,15 +136,15 @@ def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmea
     #      YOUR CODE GOES HERE       #
     ##################################
     max_repeat = 7
-    for repeat in range(0, max_repeat):
-        if repeat == 0:
+    for repeat in range(1, max_repeat):
+        if repeat == 1:
             for k in range(1, kmeans_max_k):
                 kmeans = KMeans(k, kmeans_max_iter)
                 sse_vs_iter = kmeans.fit(x_train)
                 train_sses_vs_iter.append(sse_vs_iter)
                 train_purities_vs_k.append(kmeans.get_purity(x_train, y_train))
                 train_sses_vs_k.append(min(sse_vs_iter))
-        elif repeat == max_repeat:
+        elif repeat == max_repeat-1:
             for k in range(1, kmeans_max_k):
                 kmeans = KMeans(k, kmeans_max_iter)
                 sse_vs_iter = kmeans.fit(x_train)
@@ -153,8 +152,8 @@ def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmea
                 train_sses_vs_iter[k-1] = train_sses_vs_iter[k-1]/repeat
                 
                 train_purities_vs_k[k-1] += kmeans.get_purity(x_train, y_train)
-                train_purities_vs_k[k-1] = train_purities_vs_k[k-1]/repeat
-
+                train_purities_vs_k[k-1] = train_purities_vs_k[k-1] / repeat
+                
                 train_sses_vs_k[k-1] += min(sse_vs_iter)
                 train_sses_vs_k[k-1] = train_sses_vs_k[k-1]/repeat
 
@@ -181,7 +180,7 @@ if __name__ == '__main__':
     args = load_args()
     x_train, y_train, x_test, y_test = load_data(args.root_dir)
 
-    if args.pca == 0:
+    if args.pca == 1:
         pca = PCA(args.pca_retain_ratio)
         pca.fit(x_train)
         x_train = pca.transform(x_train)
