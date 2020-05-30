@@ -149,9 +149,9 @@ def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmea
             for k in range(1, kmeans_max_k):
                 kmeans = KMeans(k, kmeans_max_iter)
                 sse_vs_iter = kmeans.fit(x_train)
-                train_sses_vs_iter[k-1] += sse_vs_iter
+                train_sses_vs_iter[k-1] += sse_vs_iter[k-1]
                 train_sses_vs_iter[k-1] = train_sses_vs_iter[k-1]/repeat
-
+                
                 train_purities_vs_k[k-1] += kmeans.get_purity(x_train, y_train)
                 train_purities_vs_k[k-1] = train_purities_vs_k[k-1]/repeat
 
@@ -162,7 +162,7 @@ def apply_kmeans(do_pca, x_train, y_train, x_test, y_test, kmeans_max_iter, kmea
             for k in range(1, kmeans_max_k):
                 kmeans = KMeans(k, kmeans_max_iter)
                 sse_vs_iter = kmeans.fit(x_train)
-                train_sses_vs_iter[k-1] += sse_vs_iter
+                train_sses_vs_iter[k-1] += sse_vs_iter[k-1]
                 train_purities_vs_k[k-1] += kmeans.get_purity(x_train, y_train)
                 train_sses_vs_k[k-1] += min(sse_vs_iter)
 
