@@ -103,9 +103,6 @@ class KMeans():
             wherei = np.squeeze(np.argwhere(labels == i), axis=1)
             sse += sum(sum(list((x[wherei, :] - self.centers[i, :])**2)))
 
-
-        print("sse: ", sse)
-
         
         return sse
 
@@ -125,9 +122,7 @@ class KMeans():
         ground_truth = 0
         for i in range(self.k):
             b = [x==i for x in labels]
-            #print(b)
             res = np.array(range(len(b)))
-            #print(i)
             k_predict = res[b]
             y_preds = y[k_predict]
             y_list = y_preds.tolist()
