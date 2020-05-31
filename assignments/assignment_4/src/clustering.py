@@ -139,9 +139,6 @@ class KMeans():
         :param x: input data of (n, m)
         :return: computes self.centers. It also returns sse_veersus_iterations for x.
         """
-        # print k
-        print("K: ", self.k)
-
 
         # intialize self.centers
         self.init_center(x)

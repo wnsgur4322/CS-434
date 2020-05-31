@@ -101,7 +101,6 @@ class PCA():
         print("Index: ", index)
         self.eig_vals = self.eig_vals[:index]
         self.eig_vecs = self.eig_vecs[:, :index]
-        print("eig_value.shape: ", self.eig_vals.shape, " | eig_vector.shape: ", self.eig_vecs.shape)
         
 
 

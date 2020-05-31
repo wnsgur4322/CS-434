@@ -30,7 +30,7 @@ def load_args():
                         help='set to 1 if we desire running kmeans, otherwise 0')
 
     parser.add_argument('--pca_retain_ratio', default=0.9, type=float)
-    parser.add_argument('--kmeans_max_k', default=11, type=int)
+    parser.add_argument('--kmeans_max_k', default=11, type=int)     # we change to defualt 11 because the range(0,10) doesn't reach k = 10
     parser.add_argument('--kmeans_max_iter', default=20, type=int)
     parser.add_argument('--root_dir', default='../data/', type=str)
     args = parser.parse_args()
@@ -89,15 +89,7 @@ def visualize(x_train, y_train):
     #      YOUR CODE GOES HERE       #
     ##################################
 
-    #ver 1
-    '''
-    pc1 = x_train.dot(x_train[0])
-    pc2 = x_train.dot(x_train[1])
-    '''
-
-    #ver 2
     x_trans = x_train.transpose()
-    #x_trans = x_train
     print(x_trans.shape)
 
     pc1 = x_trans[0]
@@ -116,7 +108,6 @@ def visualize(x_train, y_train):
     
     for i, spec in enumerate(y_train):
         plt.scatter(pc1[i], pc2[i], label = spec, s = 20, c=train_colors[train_unique.index(spec)])
-        #ax.annotate(str(i+1), (pc1[i],pc2[i]))
     
     from collections import OrderedDict
     handles, labels = plt.gca().get_legend_handles_labels()
@@ -192,7 +183,6 @@ if __name__ == '__main__':
 
     if args.kmeans == 1:
         print("X_train shape After: ", x_train.shape)
-        #exit(1)
         apply_kmeans(args.pca, x_train, y_train, x_test, y_test, args.kmeans_max_iter, args.kmeans_max_k)
 
     print('Done')
