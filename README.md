@@ -5,3 +5,4 @@ Machine Learning &amp; Data Mining - Spring 2020
 - Junhyeok Jeong, jeongju@oregonstate.edu
 - Youngjoo Lee, leey3@oregonstate.edu
 - Haewon Cho, choha@oregonstate.edu
+
